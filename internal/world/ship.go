@@ -80,6 +80,7 @@ func (ship *Ship) Update() {
 }
 
 func (ship *Ship) Draw(screen *ebiten.Image, op *ebiten.DrawImageOptions, frame int) {
+
 	imgWidth, imgHeight := ship.image.Size()
 	op.GeoM.Translate(-float64(imgWidth)/2, -float64(imgHeight)/2)
 	op.GeoM.Rotate(float64(ship.rPos) * 2 * math.Pi / 360)

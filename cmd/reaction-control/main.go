@@ -10,11 +10,14 @@ import (
 
 	"github.com/cyberpunkprogrammer/reaction-control/internal/world"
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
 var (
-	screenWidth, screenHeight, scale = 640, 480, 3
+	screenWidth, screenHeight, scale = 640, 480, 4
+	spaceImage                       *ebiten.Image
+	err                              error
 )
 
 // Game struct for ebiten
@@ -26,6 +29,7 @@ type Game struct {
 func init() {
 	world.InitImages()
 	world.InitSounds()
+	spaceImage, _, err = ebitenutil.NewImageFromFile("../../assets/space.png")
 }
 
 func newGame() *Game {
@@ -91,6 +95,8 @@ func (g *Game) Update() error {
 // Draw the screen
 func (g *Game) Draw(screen *ebiten.Image) {
 	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(0, 0)
+	screen.DrawImage(spaceImage, op)
 
 	for _, o := range world.Objects {
 		o.Draw(screen, op, g.count)

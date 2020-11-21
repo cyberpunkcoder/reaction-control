@@ -21,7 +21,7 @@ type Ship struct {
 	revThrusters     bool
 }
 
-// NewShip at x, y coordinates
+// NewShip is initialized and returned
 func NewShip(x float64, y float64) *Ship {
 	return &Ship{
 		image: shipImage,
@@ -81,12 +81,18 @@ func (ship *Ship) Update() {
 }
 
 // Draw the ship on
-func (ship *Ship) Draw(screen *ebiten.Image, op *ebiten.DrawImageOptions, g *Game) {
+func (ship *Ship) Draw(screen *ebiten.Image, g *Game) {
+
+	op := &ebiten.DrawImageOptions{}
 
 	imgWidth, imgHeight := ship.image.Size()
 	op.GeoM.Translate(-float64(imgWidth)/2, -float64(imgHeight)/2)
 	op.GeoM.Rotate(float64(ship.rPos) * 2 * math.Pi / 360)
-	op.GeoM.Translate(ship.xPos, ship.yPos)
+
+	x := (ship.xPos - g.viewPort.xPos) + (g.viewPort.width / 2)
+	y := (ship.yPos - g.viewPort.yPos) + (g.viewPort.height / 2)
+
+	op.GeoM.Translate(x, y)
 	screen.DrawImage(ship.image, op)
 
 	frame := (g.count / 2) % 2

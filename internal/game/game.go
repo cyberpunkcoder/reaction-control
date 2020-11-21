@@ -9,15 +9,15 @@ import (
 )
 
 var (
-	screenWidth, screenHeight, scale = 640, 480, 4
-	spaceImage                       *ebiten.Image
-	err                              error
+	spaceImage *ebiten.Image
+	err        error
 )
 
 // Game struct for ebiten
 type Game struct {
-	count      int
-	playerShip *Ship
+	count    int
+	player   *Ship
+	viewPort *ViewPort
 }
 
 func init() {
@@ -33,8 +33,9 @@ func newGame() *Game {
 }
 
 func (g *Game) init() {
-	g.playerShip = NewShip(float64(screenWidth/2), float64(screenHeight/2))
-	Objects = append(Objects, g.playerShip)
+	g.player = NewShip(0, 0)
+	g.viewPort = NewViewPort(g.player.xPos, g.player.yPos, 3)
+	Objects = append(Objects, g.player)
 }
 
 func (g *Game) control() {
@@ -43,33 +44,33 @@ func (g *Game) control() {
 	}
 
 	if inpututil.IsKeyJustPressed(ebiten.KeyW) {
-		g.playerShip.FwdThrustersOn()
+		g.player.FwdThrustersOn()
 	} else if inpututil.IsKeyJustReleased(ebiten.KeyW) {
-		g.playerShip.FwdThrustersOff()
+		g.player.FwdThrustersOff()
 	}
 
 	if inpututil.IsKeyJustPressed(ebiten.KeyS) {
-		g.playerShip.RevThrustersOn()
+		g.player.RevThrustersOn()
 	} else if inpututil.IsKeyJustReleased(ebiten.KeyS) {
-		g.playerShip.RevThrustersOff()
+		g.player.RevThrustersOff()
 	}
 
 	if inpututil.IsKeyJustPressed(ebiten.KeyA) {
-		g.playerShip.CcwThrustersOn()
+		g.player.CcwThrustersOn()
 	} else if inpututil.IsKeyJustReleased(ebiten.KeyA) {
-		g.playerShip.CcwThrustersOff()
+		g.player.CcwThrustersOff()
 	}
 
 	if inpututil.IsKeyJustPressed(ebiten.KeyD) {
-		g.playerShip.CwThrustersOn()
+		g.player.CwThrustersOn()
 	} else if inpututil.IsKeyJustReleased(ebiten.KeyD) {
-		g.playerShip.CwThrustersOff()
+		g.player.CwThrustersOff()
 	}
 }
 
 // Layout the screen
 func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
-	return screenWidth, screenHeight
+	return int(g.viewPort.width), int(g.viewPort.height)
 }
 
 // Update the logical state
@@ -81,6 +82,9 @@ func (g *Game) Update() error {
 		o.Update()
 	}
 
+	g.viewPort.xPos = g.player.xPos + (g.player.xSpd * 80)
+	g.viewPort.yPos = g.player.yPos + (g.player.ySpd * 80)
+
 	UpdateSound()
 
 	return nil
@@ -89,22 +93,17 @@ func (g *Game) Update() error {
 // Draw the screen
 func (g *Game) Draw(screen *ebiten.Image) {
 	op := &ebiten.DrawImageOptions{}
-	op.GeoM.Translate(0, 0)
+	op.GeoM.Translate(-g.viewPort.xPos, -g.viewPort.yPos)
 	screen.DrawImage(spaceImage, op)
 
 	for _, o := range Objects {
-		o.Draw(screen, op, g)
+		o.Draw(screen, g)
 	}
 }
 
 // Start the game
 func (g *Game) Start() {
 	ebiten.SetFullscreen(true)
-
-	// scale up pixel art for aesthetics
-	screenWidth, screenHeight = ebiten.ScreenSizeInFullscreen()
-	screenWidth /= scale
-	screenHeight /= scale
 
 	if err := ebiten.RunGame(newGame()); err != nil {
 		panic(err)

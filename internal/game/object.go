@@ -8,5 +8,5 @@ var Objects []Object
 // Object in the game world
 type Object interface {
 	Update()
-	Draw(*ebiten.Image, *ebiten.DrawImageOptions, *Game)
+	Draw(*ebiten.Image, *Game)
 }

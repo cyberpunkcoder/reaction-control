@@ -1,4 +1,4 @@
-package world
+package game
 
 import (
 	"image"
@@ -81,7 +81,7 @@ func (ship *Ship) Update() {
 }
 
 // Draw the ship on
-func (ship *Ship) Draw(screen *ebiten.Image, op *ebiten.DrawImageOptions, frame int) {
+func (ship *Ship) Draw(screen *ebiten.Image, op *ebiten.DrawImageOptions, g *Game) {
 
 	imgWidth, imgHeight := ship.image.Size()
 	op.GeoM.Translate(-float64(imgWidth)/2, -float64(imgHeight)/2)
@@ -89,7 +89,7 @@ func (ship *Ship) Draw(screen *ebiten.Image, op *ebiten.DrawImageOptions, frame 
 	op.GeoM.Translate(ship.xPos, ship.yPos)
 	screen.DrawImage(ship.image, op)
 
-	frame = (frame / 2) % 2
+	frame := (g.count / 2) % 2
 
 	if ship.ccwThrusters {
 		screen.DrawImage(rcsfl.SubImage(image.Rect(frame*32, 0, 32+(frame*32), 32)).(*ebiten.Image), op)

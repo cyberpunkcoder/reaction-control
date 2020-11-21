@@ -1,4 +1,4 @@
-package world
+package game
 
 import (
 	_ "image/png" // Required for ebitenutil.NewImageFromFile()
@@ -14,7 +14,6 @@ var (
 	rcsfr     *ebiten.Image
 	rcsbl     *ebiten.Image
 	rcsbr     *ebiten.Image
-	err       error
 )
 
 // InitImages initialize game images

@@ -1,4 +1,4 @@
-package world
+package game
 
 import (
 	"fmt"
@@ -16,6 +16,7 @@ var (
 	sampleRate    = 44100
 )
 
+// InitSounds initialize sounds
 func InitSounds() {
 	audioContext := audio.NewContext(sampleRate)
 

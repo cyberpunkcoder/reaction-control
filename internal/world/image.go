@@ -17,6 +17,7 @@ var (
 	err       error
 )
 
+// InitImages initialize game images
 func InitImages() {
 
 	shipImage, _, err = ebitenutil.NewImageFromFile("../../assets/player.png")

@@ -7,7 +7,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
-// Ship spaceShip
+// Ship space ship
 type Ship struct {
 	Object
 	image            *ebiten.Image
@@ -35,6 +35,7 @@ func NewShip(x float64, y float64) *Ship {
 	}
 }
 
+// Update the ship state
 func (ship *Ship) Update() {
 	ship.xPos += ship.xSpd
 	ship.yPos += ship.ySpd
@@ -79,6 +80,7 @@ func (ship *Ship) Update() {
 	}
 }
 
+// Draw the ship on
 func (ship *Ship) Draw(screen *ebiten.Image, op *ebiten.DrawImageOptions, frame int) {
 
 	imgWidth, imgHeight := ship.image.Size()
@@ -120,7 +122,7 @@ func (ship *Ship) Draw(screen *ebiten.Image, op *ebiten.DrawImageOptions, frame 
 	}
 }
 
-// Turns on clockwise thrusters
+// CwThrustersOn clockwise thrusters on
 func (ship *Ship) CwThrustersOn() {
 	if !ship.cwThrusters {
 		ship.cwThrusters = true
@@ -128,12 +130,12 @@ func (ship *Ship) CwThrustersOn() {
 	}
 }
 
-// Turns off clockwise thrusters
+// CwThrustersOff clockwise thruters off
 func (ship *Ship) CwThrustersOff() {
 	ship.cwThrusters = false
 }
 
-// Turns on counter-clockwise thrusters
+// CcwThrustersOn counter clockwise thrusters on
 func (ship *Ship) CcwThrustersOn() {
 	if !ship.ccwThrusters {
 		ship.ccwThrusters = true
@@ -141,12 +143,12 @@ func (ship *Ship) CcwThrustersOn() {
 	}
 }
 
-// Turns off counter-clockwise thrusters
+// CcwThrustersOff counter clockwise thrusters off
 func (ship *Ship) CcwThrustersOff() {
 	ship.ccwThrusters = false
 }
 
-// Turns on forward thrusters
+// FwdThrustersOn forward thrusters on
 func (ship *Ship) FwdThrustersOn() {
 	if !ship.fwdThrusters {
 		ship.fwdThrusters = true
@@ -154,12 +156,12 @@ func (ship *Ship) FwdThrustersOn() {
 	}
 }
 
-// Turns off forward thrusters
+// FwdThrustersOff forward thrusters off
 func (ship *Ship) FwdThrustersOff() {
 	ship.fwdThrusters = false
 }
 
-// Turns on reverse thrusters
+// RevThrustersOn reverse thrusters on
 func (ship *Ship) RevThrustersOn() {
 	if !ship.revThrusters {
 		ship.revThrusters = true
@@ -167,7 +169,7 @@ func (ship *Ship) RevThrustersOn() {
 	}
 }
 
-// Turns off reverse thrusters
+// RevThrustersOff reverse thrusters off
 func (ship *Ship) RevThrustersOff() {
 	ship.revThrusters = false
 }

@@ -37,6 +37,7 @@ func InitSounds() {
 	}
 }
 
+// UpdateSound to loop if needed
 func UpdateSound() {
 	if rcsSound.IsPlaying() && int(rcsSound.Current().Seconds()) == 4 {
 		rcsSound.Rewind()

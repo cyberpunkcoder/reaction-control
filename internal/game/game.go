@@ -4,26 +4,42 @@ import (
 	"os"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
 var (
-	spaceImage *ebiten.Image
-	err        error
+	err error
 )
+
+// Location in the game
+type Location struct {
+	x, y, r float64
+}
+
+// Physics in the game
+type Physics struct {
+	xSpd, ySpd, rSpd, mass float64
+}
+
+// Object in the game
+type Object interface {
+	Update()
+	Draw(*ebiten.Image, *Game)
+	GetLocation() Location
+	GetPhysics() Physics
+}
 
 // Game struct for ebiten
 type Game struct {
 	count    int
 	player   *Ship
 	viewPort *ViewPort
+	objects  []Object
 }
 
 func init() {
 	InitImages()
 	InitSounds()
-	spaceImage, _, err = ebitenutil.NewImageFromFile("../../assets/space.png")
 }
 
 func newGame() *Game {
@@ -34,8 +50,8 @@ func newGame() *Game {
 
 func (g *Game) init() {
 	g.player = NewShip(0, 0)
-	g.viewPort = NewViewPort(g.player.xPos, g.player.yPos, 3)
-	Objects = append(Objects, g.player)
+	g.viewPort = NewViewPort(g.player.x, g.player.y, 3)
+	g.objects = append(g.objects, g.player)
 }
 
 func (g *Game) control() {
@@ -78,12 +94,12 @@ func (g *Game) Update() error {
 	g.count++
 	g.control()
 
-	for _, o := range Objects {
+	for _, o := range g.objects {
 		o.Update()
 	}
 
-	g.viewPort.xPos = g.player.xPos + (g.player.xSpd * 80)
-	g.viewPort.yPos = g.player.yPos + (g.player.ySpd * 80)
+	g.viewPort.xPos = g.player.x + (g.player.xSpd * 80)
+	g.viewPort.yPos = g.player.y + (g.player.ySpd * 80)
 
 	UpdateSound()
 
@@ -94,9 +110,9 @@ func (g *Game) Update() error {
 func (g *Game) Draw(screen *ebiten.Image) {
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Translate(-g.viewPort.xPos, -g.viewPort.yPos)
-	screen.DrawImage(spaceImage, op)
+	screen.DrawImage(space, op)
 
-	for _, o := range Objects {
+	for _, o := range g.objects {
 		o.Draw(screen, g)
 	}
 }

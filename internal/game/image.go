@@ -14,6 +14,7 @@ var (
 	rcsfr     *ebiten.Image
 	rcsbl     *ebiten.Image
 	rcsbr     *ebiten.Image
+	space     *ebiten.Image
 )
 
 // InitImages initialize game images
@@ -24,6 +25,7 @@ func InitImages() {
 	rcsfr, _, err = ebitenutil.NewImageFromFile("../../assets/rcsfr.png")
 	rcsbl, _, err = ebitenutil.NewImageFromFile("../../assets/rcsbl.png")
 	rcsbr, _, err = ebitenutil.NewImageFromFile("../../assets/rcsbr.png")
+	space, _, err = ebitenutil.NewImageFromFile("../../assets/space.png")
 
 	if err != nil {
 		log.Fatal(err)

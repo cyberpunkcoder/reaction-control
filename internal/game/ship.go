@@ -10,39 +10,35 @@ import (
 // Ship space ship
 type Ship struct {
 	Object
-	image            *ebiten.Image
-	xPos, yPos, rPos float64
-	xSpd, ySpd, rSpd float64
-	rmax             float64
-	vmax             float64
-	cwThrusters      bool
-	ccwThrusters     bool
-	fwdThrusters     bool
-	revThrusters     bool
+	Location
+	Physics
+	image        *ebiten.Image
+	rmax         float64
+	vmax         float64
+	cwThrusters  bool
+	ccwThrusters bool
+	fwdThrusters bool
+	revThrusters bool
 }
 
 // NewShip is initialized and returned
 func NewShip(x float64, y float64) *Ship {
 	return &Ship{
-		image: shipImage,
-		xPos:  x,
-		yPos:  y,
-		xSpd:  0,
-		ySpd:  0,
-		rSpd:  0,
-		rmax:  10,
-		vmax:  1,
+		image:    shipImage,
+		Location: Location{x: x, y: y},
+		rmax:     10,
+		vmax:     1,
 	}
 }
 
 // Update the ship state
 func (ship *Ship) Update() {
-	ship.xPos += ship.xSpd
-	ship.yPos += ship.ySpd
-	ship.rPos = math.Mod(ship.rPos+ship.rSpd, 360)
+	ship.x += ship.xSpd
+	ship.y += ship.ySpd
+	ship.r = math.Mod(ship.r+ship.rSpd, 360)
 
 	if ship.fwdThrusters {
-		radAng := (ship.rPos + 90) * (math.Pi / 180)
+		radAng := (ship.r + 90) * (math.Pi / 180)
 		xSpd := ship.xSpd - 0.01*math.Cos(radAng)
 		ySpd := ship.ySpd - 0.01*math.Sin(radAng)
 
@@ -53,9 +49,9 @@ func (ship *Ship) Update() {
 	}
 
 	if ship.revThrusters {
-		radAng := (ship.rPos + 90) * (math.Pi / 180)
-		xSpd := ship.xSpd + 0.01*math.Cos(radAng)
-		ySpd := ship.ySpd + 0.01*math.Sin(radAng)
+		radAng := (ship.r + 90) * (math.Pi / 180)
+		xSpd := ship.x + 0.01*math.Cos(radAng)
+		ySpd := ship.y + 0.01*math.Sin(radAng)
 
 		if math.Abs(xSpd)+math.Abs(ySpd) < ship.vmax {
 			ship.xSpd = xSpd
@@ -80,17 +76,17 @@ func (ship *Ship) Update() {
 	}
 }
 
-// Draw the ship on
+// Draw the ship on screen in game
 func (ship *Ship) Draw(screen *ebiten.Image, g *Game) {
 
 	op := &ebiten.DrawImageOptions{}
 
 	imgWidth, imgHeight := ship.image.Size()
 	op.GeoM.Translate(-float64(imgWidth)/2, -float64(imgHeight)/2)
-	op.GeoM.Rotate(float64(ship.rPos) * 2 * math.Pi / 360)
+	op.GeoM.Rotate(float64(ship.r) * 2 * math.Pi / 360)
 
-	x := (ship.xPos - g.viewPort.xPos) + (g.viewPort.width / 2)
-	y := (ship.yPos - g.viewPort.yPos) + (g.viewPort.height / 2)
+	x := (ship.x - g.viewPort.xPos) + (g.viewPort.width / 2)
+	y := (ship.y - g.viewPort.yPos) + (g.viewPort.height / 2)
 
 	op.GeoM.Translate(x, y)
 	screen.DrawImage(ship.image, op)
@@ -126,6 +122,11 @@ func (ship *Ship) Draw(screen *ebiten.Image, g *Game) {
 			screen.DrawImage(rcsfr.SubImage(image.Rect(frame*32, 0, 32+(frame*32), 32)).(*ebiten.Image), op)
 		}
 	}
+}
+
+// GetLocation of ship
+func (ship *Ship) GetLocation() Location {
+	return ship.Location
 }
 
 // CwThrustersOn clockwise thrusters on

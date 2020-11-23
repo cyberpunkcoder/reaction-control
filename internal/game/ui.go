@@ -22,3 +22,9 @@ func (vp *ViewPort) Follow(obj Object) {
 	vp.x = obj.GetLocation().x
 	vp.y = obj.GetLocation().y
 }
+
+// FollowAhead of object
+func (vp *ViewPort) FollowAhead(obj Object) {
+	vp.x = obj.GetLocation().x + (obj.GetPhysics().xSpd * 80)
+	vp.y = obj.GetLocation().y + (obj.GetPhysics().ySpd * 80)
+}

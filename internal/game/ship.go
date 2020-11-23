@@ -129,6 +129,10 @@ func (ship *Ship) GetLocation() Location {
 	return ship.Location
 }
 
+func (ship *Ship) GetPhysics() Physics {
+	return ship.Physics
+}
+
 // CwThrustersOn clockwise thrusters on
 func (ship *Ship) CwThrustersOn() {
 	if !ship.cwThrusters {

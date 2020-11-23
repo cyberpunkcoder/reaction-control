@@ -84,12 +84,12 @@ func (g *Game) control() {
 	}
 }
 
-// Layout the screen
+// Layout the game screen
 func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 	return int(g.viewPort.width), int(g.viewPort.height)
 }
 
-// Update the logical state
+// Update logical state of the game
 func (g *Game) Update() error {
 	g.count++
 	g.control()
@@ -98,11 +98,8 @@ func (g *Game) Update() error {
 		o.Update()
 	}
 
-	g.viewPort.x = g.player.x + (g.player.xSpd * 80)
-	g.viewPort.y = g.player.y + (g.player.ySpd * 80)
-
 	UpdateSound()
-
+	g.viewPort.FollowAhead(g.player)
 	return nil
 }
 

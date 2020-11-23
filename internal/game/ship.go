@@ -50,8 +50,8 @@ func (ship *Ship) Update() {
 
 	if ship.revThrusters {
 		radAng := (ship.r + 90) * (math.Pi / 180)
-		xSpd := ship.x + 0.01*math.Cos(radAng)
-		ySpd := ship.y + 0.01*math.Sin(radAng)
+		xSpd := ship.xSpd + 0.01*math.Cos(radAng)
+		ySpd := ship.ySpd + 0.01*math.Sin(radAng)
 
 		if math.Abs(xSpd)+math.Abs(ySpd) < ship.vmax {
 			ship.xSpd = xSpd

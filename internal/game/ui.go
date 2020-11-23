@@ -4,11 +4,21 @@ import "github.com/hajimehoshi/ebiten/v2"
 
 // ViewPort a player sees through
 type ViewPort struct {
-	xPos, yPos, width, height float64
+	Location
+	width, height float64
 }
 
 // NewViewPort is initialized and returned
-func NewViewPort(xpos float64, ypos float64, scale int) *ViewPort {
+func NewViewPort(x float64, y float64, scale int) *ViewPort {
 	w, h := ebiten.ScreenSizeInFullscreen()
-	return &ViewPort{float64(w / 2), float64(h / 2), float64(w / scale), float64(h / scale)}
+	vp := ViewPort{width: float64(w / scale), height: float64(h / scale)}
+	vp.x = x
+	vp.y = y
+	return &vp
+}
+
+// Follow object
+func (vp *ViewPort) Follow(obj Object) {
+	vp.x = obj.GetLocation().x
+	vp.y = obj.GetLocation().y
 }

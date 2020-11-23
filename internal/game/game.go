@@ -98,8 +98,8 @@ func (g *Game) Update() error {
 		o.Update()
 	}
 
-	g.viewPort.xPos = g.player.x + (g.player.xSpd * 80)
-	g.viewPort.yPos = g.player.y + (g.player.ySpd * 80)
+	g.viewPort.x = g.player.x + (g.player.xSpd * 80)
+	g.viewPort.y = g.player.y + (g.player.ySpd * 80)
 
 	UpdateSound()
 
@@ -109,7 +109,7 @@ func (g *Game) Update() error {
 // Draw the screen
 func (g *Game) Draw(screen *ebiten.Image) {
 	op := &ebiten.DrawImageOptions{}
-	op.GeoM.Translate(-g.viewPort.xPos, -g.viewPort.yPos)
+	op.GeoM.Translate(-g.viewPort.x, -g.viewPort.y)
 	screen.DrawImage(space, op)
 
 	for _, o := range g.objects {

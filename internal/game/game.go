@@ -126,6 +126,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 // Start the game
 func (g *Game) Start() {
 	ebiten.SetFullscreen(true)
+	ebiten.SetCursorMode(ebiten.CursorModeHidden)
 
 	if err := ebiten.RunGame(newGame()); err != nil {
 		panic(err)

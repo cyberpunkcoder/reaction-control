@@ -99,15 +99,24 @@ func (g *Game) Update() error {
 	}
 
 	UpdateSound()
+
 	g.viewPort.FollowAhead(g.player)
 	return nil
 }
 
 // Draw the screen
 func (g *Game) Draw(screen *ebiten.Image) {
-	op := &ebiten.DrawImageOptions{}
-	op.GeoM.Translate(-g.viewPort.x, -g.viewPort.y)
-	screen.DrawImage(space, op)
+	w, h := space.Size()
+	x := (g.viewPort.x - float64(w)) - float64(int(g.viewPort.x)%w)
+	y := (g.viewPort.y - float64(h)) - float64(int(g.viewPort.y)%h)
+
+	for i := x; i < g.viewPort.x+g.viewPort.width; i += float64(w) {
+		for j := y; j < g.viewPort.y+g.viewPort.height; j += float64(h) {
+			op := &ebiten.DrawImageOptions{}
+			op.GeoM.Translate(i-g.viewPort.x, j-g.viewPort.y)
+			screen.DrawImage(space, op)
+		}
+	}
 
 	for _, o := range g.objects {
 		o.Draw(screen, g)

@@ -27,7 +27,7 @@ func NewShip(x float64, y float64) *Ship {
 		image:    shipImage,
 		Location: Location{x: x, y: y},
 		rmax:     10,
-		vmax:     1,
+		vmax:     2,
 	}
 }
 
@@ -129,6 +129,7 @@ func (ship *Ship) GetLocation() Location {
 	return ship.Location
 }
 
+// GetPhysics of ship
 func (ship *Ship) GetPhysics() Physics {
 	return ship.Physics
 }

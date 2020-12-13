@@ -1,4 +1,6 @@
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
+github.com/cyberpunkprogrammer/reaction-control v0.0.0-20201123234431-36f181e9d7fd h1:Mx7BL9M+cOFF7goqQjhXmycXGR2VtlhhwdRPZOSsXvI=
+github.com/cyberpunkprogrammer/reaction-control v0.0.0-20201123234431-36f181e9d7fd/go.mod h1:JpgxJp0TIkTA2m3fXA2TrgwelMiYOAdhZJzuC96KFtA=
 github.com/go-gl/glfw/v3.3/glfw v0.0.0-20200707082815-5321531c36a2 h1:Ac1OEHHkbAZ6EUnJahF0GKcU0FjPc/V8F1DvjhKngFE=
 github.com/go-gl/glfw/v3.3/glfw v0.0.0-20200707082815-5321531c36a2/go.mod h1:tQ2UAYgL5IevRw8kRxooKSPJfGvJ9fJQFa0TUsXzTg8=
 github.com/gofrs/flock v0.8.0 h1:MSdYClljsF3PbENUUEx85nkWfJSGfzYI9yEBZOJz6CY=

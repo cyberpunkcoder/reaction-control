@@ -1,6 +1,6 @@
 package main
 
-import "github.com/cyberpunkprogrammer/reaction-control/internal/game"
+import "github.com/cyberpunkcoder/reaction-control/internal/game"
 
 var g game.Game
 

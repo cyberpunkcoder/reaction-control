@@ -59,6 +59,18 @@ func (g *Game) control() {
 		os.Exit(0)
 	}
 
+	if inpututil.IsKeyJustPressed(ebiten.KeyQ) {
+		g.player.LThrustersOn()
+	} else if inpututil.IsKeyJustReleased(ebiten.KeyQ) {
+		g.player.LThrustersOff()
+	}
+
+	if inpututil.IsKeyJustPressed(ebiten.KeyE) {
+		g.player.RThrustersOn()
+	} else if inpututil.IsKeyJustReleased(ebiten.KeyE) {
+		g.player.RThrustersOff()
+	}
+
 	if inpututil.IsKeyJustPressed(ebiten.KeyW) {
 		g.player.FwdThrustersOn()
 	} else if inpututil.IsKeyJustReleased(ebiten.KeyW) {

@@ -161,9 +161,19 @@ func (ship *Ship) GetLocation() Location {
 	return ship.Location
 }
 
+// SetLocation of ship
+func (ship *Ship) SetLocation(location Location) {
+	ship.Location = location
+}
+
 // GetPhysics of ship
 func (ship *Ship) GetPhysics() Physics {
 	return ship.Physics
+}
+
+// SetPhysics of ship
+func (ship *Ship) SetPhysics(physics Physics) {
+	ship.Physics = physics
 }
 
 // LThrustersOn left thrusters on

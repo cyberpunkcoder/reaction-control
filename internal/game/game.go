@@ -26,7 +26,9 @@ type Object interface {
 	Update()
 	Draw(*ebiten.Image, *Game)
 	GetLocation() Location
+	SetLocation(Location)
 	GetPhysics() Physics
+	SetPhysics(Physics)
 }
 
 // Game struct for ebiten

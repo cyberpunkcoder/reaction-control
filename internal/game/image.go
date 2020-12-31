@@ -9,20 +9,22 @@ import (
 )
 
 var (
-	shipImage *ebiten.Image
-	rcsl      *ebiten.Image
-	rcsr      *ebiten.Image
-	rcsfl     *ebiten.Image
-	rcsfr     *ebiten.Image
-	rcsbl     *ebiten.Image
-	rcsbr     *ebiten.Image
-	space     *ebiten.Image
+	shipImage    *ebiten.Image
+	missileImage *ebiten.Image
+	rcsl         *ebiten.Image
+	rcsr         *ebiten.Image
+	rcsfl        *ebiten.Image
+	rcsfr        *ebiten.Image
+	rcsbl        *ebiten.Image
+	rcsbr        *ebiten.Image
+	space        *ebiten.Image
 )
 
 // InitImages initialize game images
 func InitImages() {
 
 	shipImage, _, err = ebitenutil.NewImageFromFile("../../assets/player.png")
+	missileImage, _, err = ebitenutil.NewImageFromFile("../../assets/missile.png")
 	rcsl, _, err = ebitenutil.NewImageFromFile("../../assets/rcsl.png")
 	rcsr, _, err = ebitenutil.NewImageFromFile("../../assets/rcsr.png")
 	rcsfl, _, err = ebitenutil.NewImageFromFile("../../assets/rcsfl.png")

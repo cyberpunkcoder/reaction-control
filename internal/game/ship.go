@@ -12,7 +12,7 @@ import (
 type Ship struct {
 	Object
 	Location
-	Physics
+	Speed
 	image        *ebiten.Image
 	rMax         float64
 	sMax         float64
@@ -159,7 +159,7 @@ func (ship *Ship) Draw(screen *ebiten.Image, g *Game) {
 
 // FireMissile from ship
 func (ship *Ship) FireMissile(g *Game) {
-	missile := NewMissile(g.player.Location, g.player.Physics)
+	missile := NewMissile(g.player.Location, g.player.Speed)
 	g.objects = append(g.objects, missile)
 }
 
@@ -173,14 +173,14 @@ func (ship *Ship) SetLocation(location Location) {
 	ship.Location = location
 }
 
-// GetPhysics of ship
-func (ship *Ship) GetPhysics() Physics {
-	return ship.Physics
+// GetSpeed of ship
+func (ship *Ship) GetSpeed() Speed {
+	return ship.Speed
 }
 
-// SetPhysics of ship
-func (ship *Ship) SetPhysics(physics Physics) {
-	ship.Physics = physics
+// SetSpeed of ship
+func (ship *Ship) SetSpeed(speed Speed) {
+	ship.Speed = speed
 }
 
 // LThrustersOn left thrusters on

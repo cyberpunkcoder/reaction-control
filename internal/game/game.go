@@ -16,8 +16,8 @@ type Location struct {
 	x, y, r float64
 }
 
-// Physics in the game
-type Physics struct {
+// Speed in the game
+type Speed struct {
 	xSpd, ySpd, rSpd, mass float64
 }
 
@@ -27,8 +27,8 @@ type Object interface {
 	Draw(*ebiten.Image, *Game)
 	GetLocation() Location
 	SetLocation(Location)
-	GetPhysics() Physics
-	SetPhysics(Physics)
+	GetSpeed() Speed
+	SetSpeed(Speed)
 }
 
 // Game struct for ebiten

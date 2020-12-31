@@ -7,23 +7,26 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
+const delay = 50
+const burn = 50
+
 // Missile that the player shoots
 type Missile struct {
 	Object
-	Physics
+	Speed
 	Location
 	time  int
 	image *ebiten.Image
 }
 
 // NewMissile created at x and y coordinates
-func NewMissile(location Location, physics Physics) *Missile {
+func NewMissile(location Location, speed Speed) *Missile {
 	// Initial missile ejection speed
 	radAng := (location.r + 90) * (math.Pi / 180)
-	physics.xSpd = physics.xSpd - 1*math.Cos(radAng)
-	physics.ySpd = physics.ySpd - 1*math.Sin(radAng)
+	speed.xSpd = speed.xSpd - 1*math.Cos(radAng)
+	speed.ySpd = speed.ySpd - 1*math.Sin(radAng)
 
-	return &Missile{Location: location, Physics: physics, image: missileImage, time: 0}
+	return &Missile{Location: location, Speed: speed, image: missileImage, time: 0}
 }
 
 // Update the missile state
@@ -32,11 +35,11 @@ func (missile *Missile) Update() {
 	missile.y += missile.ySpd
 	missile.r += missile.rSpd
 
-	if missile.time < 100 {
-		if missile.time > 50 {
+	if missile.time < delay+burn {
+		if missile.time > delay {
 			radAng := (missile.r + 90) * (math.Pi / 180)
-			missile.xSpd = missile.xSpd - 0.04*math.Cos(radAng)
-			missile.ySpd = missile.ySpd - 0.04*math.Sin(radAng)
+			missile.xSpd = missile.xSpd - 0.06*math.Cos(radAng)
+			missile.ySpd = missile.ySpd - 0.06*math.Sin(radAng)
 		}
 		missile.time++
 	}
@@ -48,7 +51,7 @@ func (missile *Missile) Draw(screen *ebiten.Image, g *Game) {
 	frame := ((g.count / 2) % 2) + 1
 
 	_, s := missile.image.Size()
-	op.GeoM.Translate(-float64(s)/2, -float64(s)/2)
+	op.GeoM.Translate(-4, -3)
 	op.GeoM.Rotate(float64(missile.r) * 2 * math.Pi / 360)
 
 	x := (missile.x - g.viewPort.x) + (g.viewPort.width / 2)
@@ -56,7 +59,7 @@ func (missile *Missile) Draw(screen *ebiten.Image, g *Game) {
 
 	op.GeoM.Translate(x, y)
 
-	if missile.time > 50 && missile.time < 100 {
+	if missile.time > delay && missile.time < delay+burn {
 		// Draw missile thrusting
 		screen.DrawImage(missile.image.SubImage(image.Rect(frame*s, 0, s+(frame*s), s)).(*ebiten.Image), op)
 		return
@@ -75,12 +78,12 @@ func (missile *Missile) SetLocation(location Location) {
 	missile.Location = location
 }
 
-// GetPhysics of missile
-func (missile *Missile) GetPhysics() Physics {
-	return missile.Physics
+// GetSpeed of missile
+func (missile *Missile) GetSpeed() Speed {
+	return missile.Speed
 }
 
-// SetPhysics of missile
-func (missile *Missile) SetPhysics(physics Physics) {
-	missile.Physics = physics
+// SetSpeed of missile
+func (missile *Missile) SetSpeed(speed Speed) {
+	missile.Speed = speed
 }

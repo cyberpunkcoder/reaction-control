@@ -61,6 +61,10 @@ func (g *Game) control() {
 		os.Exit(0)
 	}
 
+	if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
+		g.player.FireMissile(g)
+	}
+
 	if inpututil.IsKeyJustPressed(ebiten.KeyQ) {
 		g.player.RThrustersOn()
 	} else if inpututil.IsKeyJustReleased(ebiten.KeyQ) {

@@ -1,6 +1,7 @@
 package game
 
 import (
+	"fmt"
 	"image"
 	"math"
 
@@ -13,8 +14,8 @@ type Ship struct {
 	Location
 	Physics
 	image        *ebiten.Image
-	rmax         float64
-	vmax         float64
+	rMax         float64
+	sMax         float64
 	lThrusters   bool
 	rThrusters   bool
 	cwThrusters  bool
@@ -28,8 +29,8 @@ func NewShip(x float64, y float64) *Ship {
 	return &Ship{
 		image:    shipImage,
 		Location: Location{x: x, y: y},
-		rmax:     10,
-		vmax:     5,
+		rMax:     10,
+		sMax:     5,
 	}
 }
 
@@ -44,7 +45,7 @@ func (ship *Ship) Update() {
 		xSpd := ship.xSpd - 0.02*math.Cos(radAng)
 		ySpd := ship.ySpd - 0.02*math.Sin(radAng)
 
-		if math.Abs(xSpd)+math.Abs(ySpd) < ship.vmax {
+		if math.Abs(xSpd)+math.Abs(ySpd) <= ship.sMax {
 			ship.xSpd = xSpd
 			ship.ySpd = ySpd
 		}
@@ -55,7 +56,7 @@ func (ship *Ship) Update() {
 		xSpd := ship.xSpd - 0.02*math.Cos(radAng)
 		ySpd := ship.ySpd - 0.02*math.Sin(radAng)
 
-		if math.Abs(xSpd)+math.Abs(ySpd) < ship.vmax {
+		if math.Abs(xSpd)+math.Abs(ySpd) <= ship.sMax {
 			ship.xSpd = xSpd
 			ship.ySpd = ySpd
 		}
@@ -66,7 +67,7 @@ func (ship *Ship) Update() {
 		xSpd := ship.xSpd - 0.02*math.Cos(radAng)
 		ySpd := ship.ySpd - 0.02*math.Sin(radAng)
 
-		if math.Abs(xSpd)+math.Abs(ySpd) < ship.vmax {
+		if math.Abs(xSpd)+math.Abs(ySpd) <= ship.sMax {
 			ship.xSpd = xSpd
 			ship.ySpd = ySpd
 		}
@@ -77,20 +78,20 @@ func (ship *Ship) Update() {
 		xSpd := ship.xSpd + 0.02*math.Cos(radAng)
 		ySpd := ship.ySpd + 0.02*math.Sin(radAng)
 
-		if math.Abs(xSpd)+math.Abs(ySpd) < ship.vmax {
+		if math.Abs(xSpd)+math.Abs(ySpd) <= ship.sMax {
 			ship.xSpd = xSpd
 			ship.ySpd = ySpd
 		}
 	}
 
 	if ship.cwThrusters {
-		if ship.rSpd < ship.rmax {
+		if ship.rSpd <= ship.rMax {
 			ship.rSpd += 0.05
 		}
 	}
 
 	if ship.ccwThrusters {
-		if ship.rSpd > -ship.rmax {
+		if ship.rSpd >= -ship.rMax {
 			ship.rSpd -= 0.05
 		}
 	}
@@ -105,8 +106,8 @@ func (ship *Ship) Draw(screen *ebiten.Image, g *Game) {
 
 	op := &ebiten.DrawImageOptions{}
 
-	imgWidth, imgHeight := ship.image.Size()
-	op.GeoM.Translate(-float64(imgWidth)/2, -float64(imgHeight)/2)
+	w, h := ship.image.Size()
+	op.GeoM.Translate(-float64(w)/2, -float64(h)/2)
 	op.GeoM.Rotate(float64(ship.r) * 2 * math.Pi / 360)
 
 	x := (ship.x - g.viewPort.x) + (g.viewPort.width / 2)
@@ -118,40 +119,40 @@ func (ship *Ship) Draw(screen *ebiten.Image, g *Game) {
 	frame := (g.count / 2) % 2
 
 	if ship.lThrusters {
-		screen.DrawImage(rcsl.SubImage(image.Rect(frame*40, 0, 40+(frame*40), 32)).(*ebiten.Image), op)
+		screen.DrawImage(rcsl.SubImage(image.Rect(frame*w, 0, w+(frame*w), h)).(*ebiten.Image), op)
 	}
 
 	if ship.rThrusters {
-		screen.DrawImage(rcsr.SubImage(image.Rect(frame*40, 0, 40+(frame*40), 32)).(*ebiten.Image), op)
+		screen.DrawImage(rcsr.SubImage(image.Rect(frame*w, 0, w+(frame*w), h)).(*ebiten.Image), op)
 	}
 
 	if ship.ccwThrusters {
-		screen.DrawImage(rcsfl.SubImage(image.Rect(frame*40, 0, 40+(frame*40), 32)).(*ebiten.Image), op)
-		screen.DrawImage(rcsbr.SubImage(image.Rect(frame*40, 0, 40+(frame*40), 32)).(*ebiten.Image), op)
+		screen.DrawImage(rcsfl.SubImage(image.Rect(frame*w, 0, w+(frame*w), h)).(*ebiten.Image), op)
+		screen.DrawImage(rcsbr.SubImage(image.Rect(frame*w, 0, w+(frame*w), h)).(*ebiten.Image), op)
 	}
 
 	if ship.cwThrusters {
-		screen.DrawImage(rcsfr.SubImage(image.Rect(frame*40, 0, 40+(frame*40), 32)).(*ebiten.Image), op)
-		screen.DrawImage(rcsbl.SubImage(image.Rect(frame*40, 0, 40+(frame*40), 32)).(*ebiten.Image), op)
+		screen.DrawImage(rcsfr.SubImage(image.Rect(frame*w, 0, w+(frame*w), h)).(*ebiten.Image), op)
+		screen.DrawImage(rcsbl.SubImage(image.Rect(frame*w, 0, w+(frame*w), h)).(*ebiten.Image), op)
 	}
 
 	if ship.fwdThrusters {
 		if !ship.cwThrusters {
-			screen.DrawImage(rcsbl.SubImage(image.Rect(frame*40, 0, 40+(frame*40), 32)).(*ebiten.Image), op)
+			screen.DrawImage(rcsbl.SubImage(image.Rect(frame*w, 0, w+(frame*w), h)).(*ebiten.Image), op)
 		}
 
 		if !ship.ccwThrusters {
-			screen.DrawImage(rcsbr.SubImage(image.Rect(frame*40, 0, 40+(frame*40), 32)).(*ebiten.Image), op)
+			screen.DrawImage(rcsbr.SubImage(image.Rect(frame*w, 0, w+(frame*w), h)).(*ebiten.Image), op)
 		}
 	}
 
 	if ship.revThrusters {
 		if !ship.ccwThrusters {
-			screen.DrawImage(rcsfl.SubImage(image.Rect(frame*40, 0, 40+(frame*40), 32)).(*ebiten.Image), op)
+			screen.DrawImage(rcsfl.SubImage(image.Rect(frame*w, 0, w+(frame*w), h)).(*ebiten.Image), op)
 		}
 
 		if !ship.cwThrusters {
-			screen.DrawImage(rcsfr.SubImage(image.Rect(frame*40, 0, 40+(frame*40), 32)).(*ebiten.Image), op)
+			screen.DrawImage(rcsfr.SubImage(image.Rect(frame*w, 0, w+(frame*w), h)).(*ebiten.Image), op)
 		}
 	}
 }
@@ -178,7 +179,7 @@ func (ship *Ship) SetPhysics(physics Physics) {
 
 // LThrustersOn left thrusters on
 func (ship *Ship) LThrustersOn() {
-	if !ship.rThrusters {
+	if !ship.rThrusters && !ship.isMaxSpd() {
 		ship.lThrusters = true
 		startRcsSound()
 	}
@@ -191,7 +192,7 @@ func (ship *Ship) LThrustersOff() {
 
 // RThrustersOn right thrusters on
 func (ship *Ship) RThrustersOn() {
-	if !ship.lThrusters {
+	if !ship.lThrusters && !ship.isMaxSpd() {
 		ship.rThrusters = true
 		startRcsSound()
 	}
@@ -204,7 +205,7 @@ func (ship *Ship) RThrustersOff() {
 
 // CwThrustersOn clockwise thrusters on
 func (ship *Ship) CwThrustersOn() {
-	if !ship.cwThrusters {
+	if !ship.cwThrusters && !ship.isMaxSpd() {
 		ship.cwThrusters = true
 		startRcsSound()
 	}
@@ -217,7 +218,7 @@ func (ship *Ship) CwThrustersOff() {
 
 // CcwThrustersOn counter clockwise thrusters on
 func (ship *Ship) CcwThrustersOn() {
-	if !ship.ccwThrusters {
+	if !ship.ccwThrusters && !ship.isMaxSpd() {
 		ship.ccwThrusters = true
 		startRcsSound()
 	}
@@ -230,7 +231,8 @@ func (ship *Ship) CcwThrustersOff() {
 
 // FwdThrustersOn forward thrusters on
 func (ship *Ship) FwdThrustersOn() {
-	if !ship.fwdThrusters {
+	fmt.Println(ship.isMaxSpd())
+	if !ship.fwdThrusters && !ship.isMaxSpd() {
 		ship.fwdThrusters = true
 		startRcsSound()
 	}
@@ -243,7 +245,7 @@ func (ship *Ship) FwdThrustersOff() {
 
 // RevThrustersOn reverse thrusters on
 func (ship *Ship) RevThrustersOn() {
-	if !ship.revThrusters {
+	if !ship.revThrusters && !ship.isMaxSpd() {
 		ship.revThrusters = true
 		startRcsSound()
 	}
@@ -256,4 +258,8 @@ func (ship *Ship) RevThrustersOff() {
 
 func (ship *Ship) isThrusting() bool {
 	return ship.lThrusters || ship.rThrusters || ship.fwdThrusters || ship.revThrusters || ship.cwThrusters || ship.ccwThrusters
+}
+
+func (ship *Ship) isMaxSpd() bool {
+	return math.Abs(ship.xSpd)+math.Abs(ship.ySpd) == ship.sMax
 }

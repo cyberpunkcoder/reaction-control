@@ -160,7 +160,7 @@ func (ship *Ship) Draw(screen *ebiten.Image, g *Game) {
 // FireMissile from ship
 func (ship *Ship) FireMissile(g *Game) {
 	missile := NewMissile(g.player.Location, g.player.Speed)
-	g.objects = append(g.objects, missile)
+	g.objects[0] = append(g.objects[0], missile)
 }
 
 // GetLocation of ship

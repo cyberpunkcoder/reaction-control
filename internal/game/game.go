@@ -36,7 +36,7 @@ type Game struct {
 	count    int
 	player   *Ship
 	viewPort *ViewPort
-	objects  []Object
+	objects  [][]Object
 }
 
 func init() {
@@ -51,9 +51,18 @@ func newGame() *Game {
 }
 
 func (g *Game) init() {
+	// Create 3 layers of objects
+	// Lowest layer is for projectiles
+	// Middle layer is for player and enemies
+	// Highest slayer is for UI
+	g.objects = make([][]Object, 3)
+
+	// Create player ship
 	g.player = NewShip(0, 0)
 	g.viewPort = NewViewPort(g.player.x, g.player.y, 3)
-	g.objects = append(g.objects, g.player)
+
+	// Put ship on 2nd layer
+	g.objects[1] = append(g.objects[1], g.player)
 }
 
 func (g *Game) control() {
@@ -112,8 +121,10 @@ func (g *Game) Update() error {
 	g.count++
 	g.control()
 
-	for _, o := range g.objects {
-		o.Update()
+	for layer := 0; layer < len(g.objects); layer++ {
+		for _, o := range g.objects[layer] {
+			o.Update()
+		}
 	}
 
 	UpdateSound()
@@ -136,8 +147,10 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		}
 	}
 
-	for _, o := range g.objects {
-		o.Draw(screen, g)
+	for layer := 0; layer < len(g.objects); layer++ {
+		for _, o := range g.objects[layer] {
+			o.Draw(screen, g)
+		}
 	}
 }
 

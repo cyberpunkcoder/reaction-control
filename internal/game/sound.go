@@ -10,6 +10,7 @@ import (
 )
 
 var (
+	sounds     []*Sound
 	sampleRate = 44100
 	rcsSound   Sound
 )
@@ -45,10 +46,12 @@ func InitSounds() {
 	}
 }
 
-// UpdateSound to loop if needed
-func UpdateSound() {
-	if rcsSound.loop.IsPlaying() && int(rcsSound.loop.Current().Seconds()) == 4 {
-		rcsSound.loop.Rewind()
+// UpdateSounds to loop if needed
+func UpdateSounds() {
+	for _, sound := range sounds {
+		if sound.loop.IsPlaying() && int(sound.loop.Current().Seconds()) == 4 {
+			sound.loop.Rewind()
+		}
 	}
 }
 
@@ -56,9 +59,16 @@ func startRcsSound() {
 	rcsSound.loop.Play()
 	rcsSound.start.Rewind()
 	rcsSound.start.Play()
+	sounds = append(sounds, &rcsSound)
 }
 
 func stopRcsSound() {
+	for i := 0; i < len(sounds); i++ {
+		if sounds[i] == &rcsSound {
+			sounds[i] = sounds[len(sounds)-1]
+			sounds = sounds[:len(sounds)-1]
+		}
+	}
 	if rcsSound.loop.IsPlaying() && !rcsSound.stop.IsPlaying() {
 		rcsSound.loop.Pause()
 		rcsSound.stop.Rewind()

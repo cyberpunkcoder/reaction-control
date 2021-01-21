@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	sampleRate   = 44100
+	sampleRate   = 44000
 	looping      []*audio.Player
 	missileSound *audio.Player
 	rcs          *audio.Player
@@ -30,7 +30,7 @@ func InitSounds() {
 }
 
 //loop an audio player and pause other loops of the same track to prevent distortion
-func loop(p *audio.Player) {
+func startLoop(p *audio.Player) {
 	for _, loop := range looping {
 		if loop == p {
 			loop.Pause()
@@ -43,7 +43,7 @@ func loop(p *audio.Player) {
 }
 
 // Stop a player that is being looped and resume other loops of the same track
-func stoploop(p *audio.Player) {
+func stopLoop(p *audio.Player) {
 	found := false
 	for i := 0; i < len(looping); i++ {
 		if looping[i] == p {

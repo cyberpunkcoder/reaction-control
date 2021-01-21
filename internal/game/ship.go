@@ -96,8 +96,8 @@ func (ship *Ship) Update() {
 		}
 	}
 
-	if !ship.isThrusting() && rcsSound.IsPlaying() {
-		stopRcsSound()
+	if !ship.isThrusting() {
+		stoploop(rcs)
 	}
 }
 
@@ -187,7 +187,7 @@ func (ship *Ship) SetSpeed(speed Speed) {
 func (ship *Ship) LThrustersOn() {
 	if !ship.rThrusters && !ship.isMaxSpd() {
 		ship.lThrusters = true
-		startRcsSound()
+		loop(rcs)
 	}
 }
 
@@ -200,7 +200,7 @@ func (ship *Ship) LThrustersOff() {
 func (ship *Ship) RThrustersOn() {
 	if !ship.lThrusters && !ship.isMaxSpd() {
 		ship.rThrusters = true
-		startRcsSound()
+		loop(rcs)
 	}
 }
 
@@ -213,7 +213,7 @@ func (ship *Ship) RThrustersOff() {
 func (ship *Ship) CwThrustersOn() {
 	if !ship.cwThrusters && !ship.isMaxSpd() {
 		ship.cwThrusters = true
-		startRcsSound()
+		loop(rcs)
 	}
 }
 
@@ -226,7 +226,7 @@ func (ship *Ship) CwThrustersOff() {
 func (ship *Ship) CcwThrustersOn() {
 	if !ship.ccwThrusters && !ship.isMaxSpd() {
 		ship.ccwThrusters = true
-		startRcsSound()
+		loop(rcs)
 	}
 }
 
@@ -240,7 +240,7 @@ func (ship *Ship) FwdThrustersOn() {
 	fmt.Println(ship.isMaxSpd())
 	if !ship.fwdThrusters && !ship.isMaxSpd() {
 		ship.fwdThrusters = true
-		startRcsSound()
+		loop(rcs)
 	}
 }
 
@@ -253,7 +253,7 @@ func (ship *Ship) FwdThrustersOff() {
 func (ship *Ship) RevThrustersOn() {
 	if !ship.revThrusters && !ship.isMaxSpd() {
 		ship.revThrusters = true
-		startRcsSound()
+		loop(rcs)
 	}
 }
 

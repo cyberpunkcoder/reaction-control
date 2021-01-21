@@ -1,82 +1,61 @@
 package game
 
 import (
-	"fmt"
 	"log"
+	"os"
 
 	"github.com/hajimehoshi/ebiten/v2/audio"
-	"github.com/hajimehoshi/ebiten/v2/audio/wav"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
 
 var (
-	sounds     []*Sound
-	sampleRate = 44100
-	rcsSound   Sound
+	sampleRate   = 44100
+	looping      []*audio.Player
+	missileSound *audio.Player
+	rcs          *audio.Player
 )
 
-// Sound the game will automatically loop if not stopped
-type Sound struct {
-	start *audio.Player
-	loop  *audio.Player
-	stop  *audio.Player
-}
-
-// InitSounds initialize sounds
+// InitSounds initialize looping
 func InitSounds() {
-	rcsSound = Sound{}
-
 	audioContext := audio.NewContext(sampleRate)
 
-	file, err := ebitenutil.OpenFile("../../assets/rcsstart.wav")
-	decodedAudio, err := wav.Decode(audioContext, file)
-	rcsSound.start, err = audio.NewPlayer(audioContext, decodedAudio)
+	f, err := os.Open("../../assets/rcs.wav")
+	rcsAudio := audio.NewInfiniteLoopWithIntro(f, 1*4*int64(sampleRate), 5*4*int64(sampleRate))
 
-	file, err = ebitenutil.OpenFile("../../assets/rcs.wav")
-	decodedAudio, err = wav.Decode(audioContext, file)
-	rcsSound.loop, err = audio.NewPlayer(audioContext, decodedAudio)
-
-	file, err = ebitenutil.OpenFile("../../assets/rcsstop.wav")
-	decodedAudio, err = wav.Decode(audioContext, file)
-	rcsSound.stop, err = audio.NewPlayer(audioContext, decodedAudio)
+	rcs, err = audio.NewPlayer(audioContext, rcsAudio)
 
 	if err != nil {
-		fmt.Println("derp")
+		// There was a problem loading missile looping
 		log.Fatal(err)
 	}
 }
 
-// UpdateSounds to loop if needed
-func UpdateSounds() {
-	for _, sound := range sounds {
-		if sound.loop.IsPlaying() && int(sound.loop.Current().Seconds()) == 4 {
-			sound.loop.Rewind()
+//loop an audio player and pause other loops of the same track to prevent distortion
+func loop(p *audio.Player) {
+	for _, loop := range looping {
+		if loop == p {
+			loop.Pause()
+			break
 		}
 	}
+	looping = append(looping, p)
+	p.Rewind()
+	p.Play()
 }
 
-func startRcsSound() {
-	rcsSound.loop.Play()
-	rcsSound.start.Rewind()
-	rcsSound.start.Play()
-	sounds = append(sounds, &rcsSound)
-}
-
-func stopRcsSound() {
-	for i := 0; i < len(sounds); i++ {
-		if sounds[i] == &rcsSound {
-			sounds[i] = sounds[len(sounds)-1]
-			sounds = sounds[:len(sounds)-1]
+// Stop a player that is being looped and resume other loops of the same track
+func stoploop(p *audio.Player) {
+	found := false
+	for i := 0; i < len(looping); i++ {
+		if looping[i] == p {
+			if p.IsPlaying() && !found {
+				looping[i].Pause()
+				looping[i] = looping[len(looping)-1]
+				looping = looping[:len(looping)-1]
+				found = true
+			} else {
+				looping[i].Play()
+				break
+			}
 		}
 	}
-	if rcsSound.loop.IsPlaying() && !rcsSound.stop.IsPlaying() {
-		rcsSound.loop.Pause()
-		rcsSound.stop.Rewind()
-		rcsSound.stop.Play()
-	}
-}
-
-// IsPlaying returns true if a sound effect is playing
-func (sound *Sound) IsPlaying() bool {
-	return sound.loop.IsPlaying()
 }

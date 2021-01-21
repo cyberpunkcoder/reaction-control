@@ -127,8 +127,6 @@ func (g *Game) Update() error {
 		}
 	}
 
-	UpdateSounds()
-
 	g.viewPort.FollowAhead(g.player)
 	return nil
 }

@@ -40,8 +40,12 @@ func (missile *Missile) Update() {
 			radAng := (missile.r + 90) * (math.Pi / 180)
 			missile.xSpd = missile.xSpd - 0.06*math.Cos(radAng)
 			missile.ySpd = missile.ySpd - 0.06*math.Sin(radAng)
+		} else if missile.time == delay {
+			//missileSound.Start()
 		}
 		missile.time++
+	} else if missile.time == delay+burn {
+		//missileSound.Stop()
 	}
 }
 

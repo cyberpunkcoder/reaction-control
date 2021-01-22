@@ -10,9 +10,6 @@ import (
 // Ship space ship
 type Ship struct {
 	Object
-	Location
-	Speed
-	image        *ebiten.Image
 	rMax         float64
 	sMax         float64
 	lThrusters   bool
@@ -26,10 +23,15 @@ type Ship struct {
 // NewShip is initialized and returned
 func NewShip(x float64, y float64) *Ship {
 	return &Ship{
-		image:    shipImage,
-		Location: Location{x: x, y: y},
-		rMax:     10,
-		sMax:     5,
+		Object: Object{
+			Image: shipImage,
+			Location: Location{
+				x: x,
+				y: y,
+			},
+		},
+		rMax: 10,
+		sMax: 5,
 	}
 }
 
@@ -105,7 +107,7 @@ func (ship *Ship) Draw(screen *ebiten.Image, g *Game) {
 
 	op := &ebiten.DrawImageOptions{}
 
-	w, h := ship.image.Size()
+	w, h := ship.Image.Size()
 	op.GeoM.Translate(-float64(w)/2, -float64(h)/2)
 	op.GeoM.Rotate(float64(ship.r) * 2 * math.Pi / 360)
 
@@ -113,7 +115,7 @@ func (ship *Ship) Draw(screen *ebiten.Image, g *Game) {
 	y := (ship.y - g.viewPort.y) + (g.viewPort.height / 2)
 
 	op.GeoM.Translate(x, y)
-	screen.DrawImage(ship.image, op)
+	screen.DrawImage(ship.Image, op)
 
 	frame := (g.count / 2) % 2
 
@@ -159,7 +161,7 @@ func (ship *Ship) Draw(screen *ebiten.Image, g *Game) {
 // FireMissile from ship
 func (ship *Ship) FireMissile(g *Game) {
 	missile := NewMissile(g.player.Location, g.player.Speed)
-	g.objects[0] = append(g.objects[0], missile)
+	g.elements[0] = append(g.elements[0], missile)
 	release.Rewind()
 	release.Play()
 }

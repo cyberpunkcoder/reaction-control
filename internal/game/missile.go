@@ -14,10 +14,10 @@ const thrust = 0.05
 // Missile that the player shoots
 type Missile struct {
 	Object
-	Speed
-	Location
-	time  int
-	image *ebiten.Image
+	time int
+	//delay  int64
+	//burn   int64
+	//thrust int64
 }
 
 // NewMissile created at x and y coordinates
@@ -27,7 +27,12 @@ func NewMissile(location Location, speed Speed) *Missile {
 	speed.xSpd = speed.xSpd - 1*math.Cos(radAng)
 	speed.ySpd = speed.ySpd - 1*math.Sin(radAng)
 
-	return &Missile{Location: location, Speed: speed, image: missileImage, time: 0}
+	return &Missile{
+		Object: Object{
+			Location: location,
+			Speed:    speed,
+			Image:    missileImage},
+		time: 0}
 }
 
 // Update the m state
@@ -58,7 +63,7 @@ func (m *Missile) Draw(screen *ebiten.Image, g *Game) {
 	op := &ebiten.DrawImageOptions{}
 	frame := ((g.count / 2) % 2) + 1
 
-	_, s := m.image.Size()
+	_, s := m.Image.Size()
 	op.GeoM.Translate(-4, -3)
 	op.GeoM.Rotate(float64(m.r) * 2 * math.Pi / 360)
 
@@ -69,11 +74,11 @@ func (m *Missile) Draw(screen *ebiten.Image, g *Game) {
 
 	if m.time > delay && m.time < delay+burn {
 		// Draw m thrusting
-		screen.DrawImage(m.image.SubImage(image.Rect(frame*s, 0, s+(frame*s), s)).(*ebiten.Image), op)
+		screen.DrawImage(m.Image.SubImage(image.Rect(frame*s, 0, s+(frame*s), s)).(*ebiten.Image), op)
 		return
 	}
 	// Draw m not thrusting
-	screen.DrawImage(m.image.SubImage(image.Rect(0, 0, s, s)).(*ebiten.Image), op)
+	screen.DrawImage(m.Image.SubImage(image.Rect(0, 0, s, s)).(*ebiten.Image), op)
 }
 
 // GetLocation of m

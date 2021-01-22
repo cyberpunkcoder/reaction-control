@@ -18,17 +18,22 @@ type Location struct {
 
 // Speed in the game
 type Speed struct {
-	xSpd, ySpd, rSpd, mass float64
+	xSpd, ySpd, rSpd float64
+}
+
+// Element within the game
+type Element interface {
+	Update()
+	Draw(*ebiten.Image, *Game)
 }
 
 // Object in the game
-type Object interface {
-	Update()
-	Draw(*ebiten.Image, *Game)
-	GetLocation() Location
-	SetLocation(Location)
-	GetSpeed() Speed
-	SetSpeed(Speed)
+type Object struct {
+	Element
+	Speed
+	Location
+	Mass  float64
+	Image *ebiten.Image
 }
 
 // Game struct for ebiten
@@ -36,7 +41,7 @@ type Game struct {
 	count    int
 	player   *Ship
 	viewPort *ViewPort
-	objects  [][]Object
+	elements [][]Element
 }
 
 func init() {
@@ -54,15 +59,15 @@ func (g *Game) init() {
 	// Create 3 layers of objects
 	// Lowest layer is for projectiles
 	// Middle layer is for player and enemies
-	// Highest slayer is for UI
-	g.objects = make([][]Object, 3)
+	// Highest layer is for UI
+	g.elements = make([][]Element, 3)
 
 	// Create player ship
 	g.player = NewShip(0, 0)
 	g.viewPort = NewViewPort(g.player.x, g.player.y)
 
 	// Put ship on 2nd layer
-	g.objects[1] = append(g.objects[1], g.player)
+	g.elements[1] = append(g.elements[1], g.player)
 }
 
 func (g *Game) control() {
@@ -121,13 +126,13 @@ func (g *Game) Update() error {
 	g.count++
 	g.control()
 
-	for layer := 0; layer < len(g.objects); layer++ {
-		for _, o := range g.objects[layer] {
-			o.Update()
+	for layer := 0; layer < len(g.elements); layer++ {
+		for _, e := range g.elements[layer] {
+			e.Update()
 		}
 	}
 
-	g.viewPort.FollowAhead(g.player)
+	g.viewPort.FollowAhead(g.player.Object)
 	return nil
 }
 
@@ -147,8 +152,8 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	}
 
 	// Draw objects according to their layer
-	for layer := 0; layer < len(g.objects); layer++ {
-		for _, o := range g.objects[layer] {
+	for layer := 0; layer < len(g.elements); layer++ {
+		for _, o := range g.elements[layer] {
 			o.Draw(screen, g)
 		}
 	}

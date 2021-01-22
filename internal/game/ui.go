@@ -30,13 +30,13 @@ func NewViewPort(x float64, y float64) *ViewPort {
 }
 
 // Follow object
-func (vp *ViewPort) Follow(obj Object) {
-	vp.x = obj.GetLocation().x
-	vp.y = obj.GetLocation().y
+func (vp *ViewPort) Follow(o Object) {
+	vp.x = o.x
+	vp.y = o.y
 }
 
 // FollowAhead of object
-func (vp *ViewPort) FollowAhead(obj Object) {
-	vp.x = obj.GetLocation().x + (obj.GetSpeed().xSpd * (vp.width / 16))
-	vp.y = obj.GetLocation().y + (obj.GetSpeed().ySpd * (vp.height / 16))
+func (vp *ViewPort) FollowAhead(o Object) {
+	vp.x = o.x + (o.xSpd * (vp.width / 16))
+	vp.y = o.y + (o.ySpd * (vp.height / 16))
 }

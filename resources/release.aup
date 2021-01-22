@@ -1,0 +1,30 @@
+<?xml version="1.0" standalone="no" ?>
+<!DOCTYPE project PUBLIC "-//audacityproject-1.3.0//DTD//EN" "http://audacity.sourceforge.net/xml/audacityproject-1.3.0.dtd" >
+<project xmlns="http://audacity.sourceforge.net/xml/" projname="release_data" version="1.3.0" audacityversion="2.4.2" sel0="3.1157704477" sel1="3.1157704477" vpos="0" h="0.0000000000" zoom="240.3899814080" rate="44100.0" snapto="off" selectionformat="hh:mm:ss + milliseconds" frequencyformat="Hz" bandwidthformat="octaves">
+	<tags>
+		<tag name="Software" value="Lavf57.56.101"/>
+		<tag name="compatible_brands" value="iso6mp41"/>
+		<tag name="major_brand" value="dash"/>
+		<tag name="minor_version" value="0"/>
+	</tags>
+	<wavetrack name="Metal Hit Sound Effects All Sounds" isSelected="1" height="150" minimized="0" channel="0" linked="1" mute="0" solo="0" rate="44100" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="44100">
+				<waveblock start="0">
+					<simpleblockfile filename="eff1fd6a.au" len="44100" min="-0.41162" max="0.405301" rms="0.027882"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="Metal Hit Sound Effects All Sounds" isSelected="1" height="150" minimized="0" channel="1" linked="0" mute="0" solo="0" rate="44100" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="44100">
+				<waveblock start="0">
+					<simpleblockfile filename="eff1fb59.au" len="44100" min="-0.599799" max="0.60939" rms="0.033033"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+</project>

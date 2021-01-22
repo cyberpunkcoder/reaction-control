@@ -160,6 +160,8 @@ func (ship *Ship) Draw(screen *ebiten.Image, g *Game) {
 func (ship *Ship) FireMissile(g *Game) {
 	missile := NewMissile(g.player.Location, g.player.Speed)
 	g.objects[0] = append(g.objects[0], missile)
+	release.Rewind()
+	release.Play()
 }
 
 // GetLocation of ship
@@ -194,6 +196,8 @@ func (ship *Ship) LThrustersOn() {
 // LThrustersOff left thrusters off
 func (ship *Ship) LThrustersOff() {
 	ship.lThrusters = false
+	rcsOff.Rewind()
+	rcsOff.Play()
 }
 
 // RThrustersOn right thrusters on
@@ -208,6 +212,8 @@ func (ship *Ship) RThrustersOn() {
 // RThrustersOff right thrusters off
 func (ship *Ship) RThrustersOff() {
 	ship.rThrusters = false
+	rcsOff.Rewind()
+	rcsOff.Play()
 }
 
 // CwThrustersOn clockwise thrusters on
@@ -222,6 +228,8 @@ func (ship *Ship) CwThrustersOn() {
 // CwThrustersOff clockwise thruters off
 func (ship *Ship) CwThrustersOff() {
 	ship.cwThrusters = false
+	rcsOff.Rewind()
+	rcsOff.Play()
 }
 
 // CcwThrustersOn counter clockwise thrusters on
@@ -236,6 +244,8 @@ func (ship *Ship) CcwThrustersOn() {
 // CcwThrustersOff counter clockwise thrusters off
 func (ship *Ship) CcwThrustersOff() {
 	ship.ccwThrusters = false
+	rcsOff.Rewind()
+	rcsOff.Play()
 }
 
 // FwdThrustersOn forward thrusters on
@@ -250,6 +260,8 @@ func (ship *Ship) FwdThrustersOn() {
 // FwdThrustersOff forward thrusters off
 func (ship *Ship) FwdThrustersOff() {
 	ship.fwdThrusters = false
+	rcsOff.Rewind()
+	rcsOff.Play()
 }
 
 // RevThrustersOn reverse thrusters on
@@ -264,6 +276,8 @@ func (ship *Ship) RevThrustersOn() {
 // RevThrustersOff reverse thrusters off
 func (ship *Ship) RevThrustersOff() {
 	ship.revThrusters = false
+	rcsOff.Rewind()
+	rcsOff.Play()
 }
 
 func (ship *Ship) isThrusting() bool {

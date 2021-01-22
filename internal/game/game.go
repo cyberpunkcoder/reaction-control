@@ -168,3 +168,8 @@ func (g *Game) Start() {
 		panic(err)
 	}
 }
+
+// ApplyForce to an object of value f, at p Position
+func (o *Object) ApplyForce(f float64, p Position) {
+
+}

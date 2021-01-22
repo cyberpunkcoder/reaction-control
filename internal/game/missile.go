@@ -18,7 +18,7 @@ type Missile struct {
 
 // NewMissile created at position with speed
 func NewMissile(p Position, s Speed) *Missile {
-	// Initial m ejection speed
+	// Initial missile ejection speed
 	radAng := (p.rPos + 90) * (math.Pi / 180)
 	s.xSpd = s.xSpd - 1*math.Cos(radAng)
 	s.ySpd = s.ySpd - 1*math.Sin(radAng)
@@ -35,7 +35,7 @@ func NewMissile(p Position, s Speed) *Missile {
 	}
 }
 
-// Update the m state
+// Update the missile state
 func (m *Missile) Update() {
 	m.xPos += m.xSpd
 	m.yPos += m.ySpd
@@ -64,7 +64,7 @@ func (m *Missile) Update() {
 	m.time++
 }
 
-// Draw the m
+// Draw the missile
 func (m *Missile) Draw(screen *ebiten.Image, g *Game) {
 	op := &ebiten.DrawImageOptions{}
 	frame := ((g.count / 2) % 2) + 1
@@ -79,10 +79,10 @@ func (m *Missile) Draw(screen *ebiten.Image, g *Game) {
 	op.GeoM.Translate(x, y)
 
 	if m.time > m.delay && m.time < m.delay+m.burn {
-		// Draw m thrusting
+		// Draw missile thrusting
 		screen.DrawImage(m.Image.SubImage(image.Rect(frame*s, 0, s+(frame*s), s)).(*ebiten.Image), op)
 		return
 	}
-	// Draw m not thrusting
+	// Draw missile not thrusting
 	screen.DrawImage(m.Image.SubImage(image.Rect(0, 0, s, s)).(*ebiten.Image), op)
 }

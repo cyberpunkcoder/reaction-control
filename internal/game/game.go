@@ -11,9 +11,9 @@ var (
 	err error
 )
 
-// Location in the game
-type Location struct {
-	x, y, r float64
+// Position in the game
+type Position struct {
+	xPos, yPos, rPos float64
 }
 
 // Speed in the game
@@ -31,7 +31,7 @@ type Element interface {
 type Object struct {
 	Element
 	Speed
-	Location
+	Position
 	Mass  float64
 	Image *ebiten.Image
 }
@@ -63,8 +63,8 @@ func (g *Game) init() {
 	g.elements = make([][]Element, 3)
 
 	// Create player ship
-	g.player = NewShip(0, 0)
-	g.viewPort = NewViewPort(g.player.x, g.player.y)
+	g.player = NewShip(Position{}, Speed{})
+	g.viewPort = NewViewPort(g.player.Position)
 
 	// Put ship on 2nd layer
 	g.elements[1] = append(g.elements[1], g.player)
@@ -139,14 +139,14 @@ func (g *Game) Update() error {
 // Draw the screen
 func (g *Game) Draw(screen *ebiten.Image) {
 	w, h := space.Size()
-	x := (g.viewPort.x - float64(w)) - float64(int(g.viewPort.x)%w)
-	y := (g.viewPort.y - float64(h)) - float64(int(g.viewPort.y)%h)
+	x := (g.viewPort.xPos - float64(w)) - float64(int(g.viewPort.xPos)%w)
+	y := (g.viewPort.yPos - float64(h)) - float64(int(g.viewPort.yPos)%h)
 
 	// Draw background only where viewport is
-	for i := x; i < g.viewPort.x+g.viewPort.width; i += float64(w) {
-		for j := y; j < g.viewPort.y+g.viewPort.height; j += float64(h) {
+	for i := x; i < g.viewPort.xPos+g.viewPort.width; i += float64(w) {
+		for j := y; j < g.viewPort.yPos+g.viewPort.height; j += float64(h) {
 			op := &ebiten.DrawImageOptions{}
-			op.GeoM.Translate(i-g.viewPort.x, j-g.viewPort.y)
+			op.GeoM.Translate(i-g.viewPort.xPos, j-g.viewPort.yPos)
 			screen.DrawImage(space, op)
 		}
 	}

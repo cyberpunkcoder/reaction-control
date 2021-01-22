@@ -4,12 +4,12 @@ import "github.com/hajimehoshi/ebiten/v2"
 
 // ViewPort a player sees through
 type ViewPort struct {
-	Location
+	Position
 	width, height float64
 }
 
 // NewViewPort is initialized and returned
-func NewViewPort(x float64, y float64) *ViewPort {
+func NewViewPort(p Position) *ViewPort {
 	w, h := ebiten.ScreenSizeInFullscreen()
 
 	// Default scale for game is 3 px for each image px
@@ -24,19 +24,19 @@ func NewViewPort(x float64, y float64) *ViewPort {
 	}
 
 	vp := ViewPort{width: float64(w / scale), height: float64(h / scale)}
-	vp.x = x
-	vp.y = y
+	vp.xPos = p.xPos
+	vp.yPos = p.yPos
 	return &vp
 }
 
 // Follow object
 func (vp *ViewPort) Follow(o Object) {
-	vp.x = o.x
-	vp.y = o.y
+	vp.xPos = o.xPos
+	vp.yPos = o.yPos
 }
 
 // FollowAhead of object
 func (vp *ViewPort) FollowAhead(o Object) {
-	vp.x = o.x + (o.xSpd * (vp.width / 16))
-	vp.y = o.y + (o.ySpd * (vp.height / 16))
+	vp.xPos = o.xPos + (o.xSpd * (vp.width / 16))
+	vp.yPos = o.yPos + (o.ySpd * (vp.height / 16))
 }

@@ -12,6 +12,7 @@ type Ship struct {
 	Object
 	rMax         float64
 	sMax         float64
+	thrust       float64
 	lThrusters   bool
 	rThrusters   bool
 	cwThrusters  bool
@@ -21,251 +22,250 @@ type Ship struct {
 }
 
 // NewShip is initialized and returned
-func NewShip(x float64, y float64) *Ship {
+func NewShip(p Position, s Speed) *Ship {
 	return &Ship{
 		Object: Object{
-			Image: shipImage,
-			Location: Location{
-				x: x,
-				y: y,
-			},
+			Image:    shipImage,
+			Position: p,
+			Speed:    s,
 		},
-		rMax: 10,
-		sMax: 5,
+		rMax:   10,
+		sMax:   5,
+		thrust: 0.02,
 	}
 }
 
 // Update the ship state
-func (ship *Ship) Update() {
-	ship.x += ship.xSpd
-	ship.y += ship.ySpd
-	ship.r = math.Mod(ship.r+ship.rSpd, 360)
+func (s *Ship) Update() {
+	s.xPos += s.xSpd
+	s.yPos += s.ySpd
+	s.rPos = math.Mod(s.rPos+s.rSpd, 360)
 
-	if ship.lThrusters {
-		radAng := (ship.r + 180) * (math.Pi / 180)
-		xSpd := ship.xSpd - 0.02*math.Cos(radAng)
-		ySpd := ship.ySpd - 0.02*math.Sin(radAng)
+	if s.lThrusters {
+		radAng := (s.rPos + 180) * (math.Pi / 180)
+		xSpd := s.xSpd - s.thrust*math.Cos(radAng)
+		ySpd := s.ySpd - s.thrust*math.Sin(radAng)
 
-		if math.Abs(xSpd)+math.Abs(ySpd) <= ship.sMax {
-			ship.xSpd = xSpd
-			ship.ySpd = ySpd
+		if math.Abs(xSpd)+math.Abs(ySpd) <= s.sMax {
+			s.xSpd = xSpd
+			s.ySpd = ySpd
 		}
 	}
 
-	if ship.rThrusters {
-		radAng := (ship.r) * (math.Pi / 180)
-		xSpd := ship.xSpd - 0.02*math.Cos(radAng)
-		ySpd := ship.ySpd - 0.02*math.Sin(radAng)
+	if s.rThrusters {
+		radAng := (s.rPos) * (math.Pi / 180)
+		xSpd := s.xSpd - s.thrust*math.Cos(radAng)
+		ySpd := s.ySpd - s.thrust*math.Sin(radAng)
 
-		if math.Abs(xSpd)+math.Abs(ySpd) <= ship.sMax {
-			ship.xSpd = xSpd
-			ship.ySpd = ySpd
+		if math.Abs(xSpd)+math.Abs(ySpd) <= s.sMax {
+			s.xSpd = xSpd
+			s.ySpd = ySpd
 		}
 	}
 
-	if ship.fwdThrusters {
-		radAng := (ship.r + 90) * (math.Pi / 180)
-		xSpd := ship.xSpd - 0.02*math.Cos(radAng)
-		ySpd := ship.ySpd - 0.02*math.Sin(radAng)
+	if s.fwdThrusters {
+		radAng := (s.rPos + 90) * (math.Pi / 180)
+		xSpd := s.xSpd - s.thrust*math.Cos(radAng)
+		ySpd := s.ySpd - s.thrust*math.Sin(radAng)
 
-		if math.Abs(xSpd)+math.Abs(ySpd) <= ship.sMax {
-			ship.xSpd = xSpd
-			ship.ySpd = ySpd
+		if math.Abs(xSpd)+math.Abs(ySpd) <= s.sMax {
+			s.xSpd = xSpd
+			s.ySpd = ySpd
 		}
 	}
 
-	if ship.revThrusters {
-		radAng := (ship.r + 90) * (math.Pi / 180)
-		xSpd := ship.xSpd + 0.02*math.Cos(radAng)
-		ySpd := ship.ySpd + 0.02*math.Sin(radAng)
+	if s.revThrusters {
+		radAng := (s.rPos + 90) * (math.Pi / 180)
+		xSpd := s.xSpd + s.thrust*math.Cos(radAng)
+		ySpd := s.ySpd + s.thrust*math.Sin(radAng)
 
-		if math.Abs(xSpd)+math.Abs(ySpd) <= ship.sMax {
-			ship.xSpd = xSpd
-			ship.ySpd = ySpd
+		if math.Abs(xSpd)+math.Abs(ySpd) <= s.sMax {
+			s.xSpd = xSpd
+			s.ySpd = ySpd
 		}
 	}
 
-	if ship.cwThrusters {
-		if ship.rSpd <= ship.rMax {
-			ship.rSpd += 0.05
+	if s.cwThrusters {
+		if s.rSpd <= s.rMax {
+			s.rSpd += s.thrust * 2
 		}
 	}
 
-	if ship.ccwThrusters {
-		if ship.rSpd >= -ship.rMax {
-			ship.rSpd -= 0.05
+	if s.ccwThrusters {
+		if s.rSpd >= -s.rMax {
+			s.rSpd -= s.thrust * 2
 		}
 	}
 
-	if !ship.isThrusting() {
+	if !s.isThrusting() {
 		rcs.Pause()
 	}
 }
 
 // Draw the ship on screen in game
-func (ship *Ship) Draw(screen *ebiten.Image, g *Game) {
+func (s *Ship) Draw(screen *ebiten.Image, g *Game) {
 
 	op := &ebiten.DrawImageOptions{}
 
-	w, h := ship.Image.Size()
+	w, h := s.Image.Size()
 	op.GeoM.Translate(-float64(w)/2, -float64(h)/2)
-	op.GeoM.Rotate(float64(ship.r) * 2 * math.Pi / 360)
+	op.GeoM.Rotate(float64(s.rPos) * 2 * math.Pi / 360)
 
-	x := (ship.x - g.viewPort.x) + (g.viewPort.width / 2)
-	y := (ship.y - g.viewPort.y) + (g.viewPort.height / 2)
+	x := (s.xPos - g.viewPort.xPos) + (g.viewPort.width / 2)
+	y := (s.yPos - g.viewPort.yPos) + (g.viewPort.height / 2)
 
 	op.GeoM.Translate(x, y)
-	screen.DrawImage(ship.Image, op)
+	screen.DrawImage(s.Image, op)
 
 	frame := (g.count / 2) % 2
 
-	if ship.lThrusters {
+	if s.lThrusters {
 		screen.DrawImage(rcsl.SubImage(image.Rect(frame*w, 0, w+(frame*w), h)).(*ebiten.Image), op)
 	}
 
-	if ship.rThrusters {
+	if s.rThrusters {
 		screen.DrawImage(rcsr.SubImage(image.Rect(frame*w, 0, w+(frame*w), h)).(*ebiten.Image), op)
 	}
 
-	if ship.ccwThrusters {
+	if s.ccwThrusters {
 		screen.DrawImage(rcsfl.SubImage(image.Rect(frame*w, 0, w+(frame*w), h)).(*ebiten.Image), op)
 		screen.DrawImage(rcsbr.SubImage(image.Rect(frame*w, 0, w+(frame*w), h)).(*ebiten.Image), op)
 	}
 
-	if ship.cwThrusters {
+	if s.cwThrusters {
 		screen.DrawImage(rcsfr.SubImage(image.Rect(frame*w, 0, w+(frame*w), h)).(*ebiten.Image), op)
 		screen.DrawImage(rcsbl.SubImage(image.Rect(frame*w, 0, w+(frame*w), h)).(*ebiten.Image), op)
 	}
 
-	if ship.fwdThrusters {
-		if !ship.cwThrusters {
+	if s.fwdThrusters {
+		if !s.cwThrusters {
 			screen.DrawImage(rcsbl.SubImage(image.Rect(frame*w, 0, w+(frame*w), h)).(*ebiten.Image), op)
 		}
 
-		if !ship.ccwThrusters {
+		if !s.ccwThrusters {
 			screen.DrawImage(rcsbr.SubImage(image.Rect(frame*w, 0, w+(frame*w), h)).(*ebiten.Image), op)
 		}
 	}
 
-	if ship.revThrusters {
-		if !ship.ccwThrusters {
+	if s.revThrusters {
+		if !s.ccwThrusters {
 			screen.DrawImage(rcsfl.SubImage(image.Rect(frame*w, 0, w+(frame*w), h)).(*ebiten.Image), op)
 		}
 
-		if !ship.cwThrusters {
+		if !s.cwThrusters {
 			screen.DrawImage(rcsfr.SubImage(image.Rect(frame*w, 0, w+(frame*w), h)).(*ebiten.Image), op)
 		}
 	}
 }
 
 // FireMissile from ship
-func (ship *Ship) FireMissile(g *Game) {
-	missile := NewMissile(g.player.Location, g.player.Speed)
+func (s *Ship) FireMissile(g *Game) {
+	missile := NewMissile(g.player.Position, g.player.Speed)
 	g.elements[0] = append(g.elements[0], missile)
 	release.Rewind()
 	release.Play()
 }
 
 // LThrustersOn left thrusters on
-func (ship *Ship) LThrustersOn() {
-	if !ship.rThrusters && !ship.isMaxSpd() {
-		ship.lThrusters = true
+func (s *Ship) LThrustersOn() {
+	if !s.rThrusters && !s.isMaxSpd() {
+		s.lThrusters = true
 		rcs.Rewind()
 		rcs.Play()
 	}
 }
 
 // LThrustersOff left thrusters off
-func (ship *Ship) LThrustersOff() {
-	ship.lThrusters = false
+func (s *Ship) LThrustersOff() {
+	s.lThrusters = false
 	rcsOff.Rewind()
 	rcsOff.Play()
 }
 
 // RThrustersOn right thrusters on
-func (ship *Ship) RThrustersOn() {
-	if !ship.lThrusters && !ship.isMaxSpd() {
-		ship.rThrusters = true
+func (s *Ship) RThrustersOn() {
+	if !s.lThrusters && !s.isMaxSpd() {
+		s.rThrusters = true
 		rcs.Rewind()
 		rcs.Play()
 	}
 }
 
 // RThrustersOff right thrusters off
-func (ship *Ship) RThrustersOff() {
-	ship.rThrusters = false
+func (s *Ship) RThrustersOff() {
+	s.rThrusters = false
 	rcsOff.Rewind()
 	rcsOff.Play()
 }
 
 // CwThrustersOn clockwise thrusters on
-func (ship *Ship) CwThrustersOn() {
-	if !ship.cwThrusters && !ship.isMaxSpd() {
-		ship.cwThrusters = true
+func (s *Ship) CwThrustersOn() {
+	if !s.cwThrusters && !s.isMaxSpd() {
+		s.cwThrusters = true
 		rcs.Rewind()
 		rcs.Play()
 	}
 }
 
 // CwThrustersOff clockwise thruters off
-func (ship *Ship) CwThrustersOff() {
-	ship.cwThrusters = false
+func (s *Ship) CwThrustersOff() {
+	s.cwThrusters = false
 	rcsOff.Rewind()
 	rcsOff.Play()
 }
 
 // CcwThrustersOn counter clockwise thrusters on
-func (ship *Ship) CcwThrustersOn() {
-	if !ship.ccwThrusters && !ship.isMaxSpd() {
-		ship.ccwThrusters = true
+func (s *Ship) CcwThrustersOn() {
+	if !s.ccwThrusters && !s.isMaxSpd() {
+		s.ccwThrusters = true
 		rcs.Rewind()
 		rcs.Play()
 	}
 }
 
 // CcwThrustersOff counter clockwise thrusters off
-func (ship *Ship) CcwThrustersOff() {
-	ship.ccwThrusters = false
+func (s *Ship) CcwThrustersOff() {
+	s.ccwThrusters = false
 	rcsOff.Rewind()
 	rcsOff.Play()
 }
 
 // FwdThrustersOn forward thrusters on
-func (ship *Ship) FwdThrustersOn() {
-	if !ship.fwdThrusters && !ship.isMaxSpd() {
-		ship.fwdThrusters = true
+func (s *Ship) FwdThrustersOn() {
+	if !s.fwdThrusters && !s.isMaxSpd() {
+		s.fwdThrusters = true
 		rcs.Rewind()
 		rcs.Play()
 	}
 }
 
 // FwdThrustersOff forward thrusters off
-func (ship *Ship) FwdThrustersOff() {
-	ship.fwdThrusters = false
+func (s *Ship) FwdThrustersOff() {
+	s.fwdThrusters = false
 	rcsOff.Rewind()
 	rcsOff.Play()
 }
 
 // RevThrustersOn reverse thrusters on
-func (ship *Ship) RevThrustersOn() {
-	if !ship.revThrusters && !ship.isMaxSpd() {
-		ship.revThrusters = true
+func (s *Ship) RevThrustersOn() {
+	if !s.revThrusters && !s.isMaxSpd() {
+		s.revThrusters = true
 		rcs.Rewind()
 		rcs.Play()
 	}
 }
 
 // RevThrustersOff reverse thrusters off
-func (ship *Ship) RevThrustersOff() {
-	ship.revThrusters = false
+func (s *Ship) RevThrustersOff() {
+	s.revThrusters = false
 	rcsOff.Rewind()
 	rcsOff.Play()
 }
 
-func (ship *Ship) isThrusting() bool {
-	return ship.lThrusters || ship.rThrusters || ship.fwdThrusters || ship.revThrusters || ship.cwThrusters || ship.ccwThrusters
+func (s *Ship) isThrusting() bool {
+	return s.lThrusters || s.rThrusters || s.fwdThrusters || s.revThrusters || s.cwThrusters || s.ccwThrusters
 }
 
-func (ship *Ship) isMaxSpd() bool {
-	return math.Abs(ship.xSpd)+math.Abs(ship.ySpd) == ship.sMax
+func (s *Ship) isMaxSpd() bool {
+	return math.Abs(s.xSpd)+math.Abs(s.ySpd) == s.sMax
 }

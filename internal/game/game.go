@@ -59,7 +59,7 @@ func (g *Game) init() {
 
 	// Create player ship
 	g.player = NewShip(0, 0)
-	g.viewPort = NewViewPort(g.player.x, g.player.y, 3)
+	g.viewPort = NewViewPort(g.player.x, g.player.y, 4)
 
 	// Put ship on 2nd layer
 	g.objects[1] = append(g.objects[1], g.player)
@@ -137,6 +137,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	x := (g.viewPort.x - float64(w)) - float64(int(g.viewPort.x)%w)
 	y := (g.viewPort.y - float64(h)) - float64(int(g.viewPort.y)%h)
 
+	// Draw background only where viewport is
 	for i := x; i < g.viewPort.x+g.viewPort.width; i += float64(w) {
 		for j := y; j < g.viewPort.y+g.viewPort.height; j += float64(h) {
 			op := &ebiten.DrawImageOptions{}
@@ -145,6 +146,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		}
 	}
 
+	// Draw objects according to their layer
 	for layer := 0; layer < len(g.objects); layer++ {
 		for _, o := range g.objects[layer] {
 			o.Draw(screen, g)

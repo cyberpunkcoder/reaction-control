@@ -59,7 +59,7 @@ func (g *Game) init() {
 
 	// Create player ship
 	g.player = NewShip(0, 0)
-	g.viewPort = NewViewPort(g.player.x, g.player.y, 4)
+	g.viewPort = NewViewPort(g.player.x, g.player.y)
 
 	// Put ship on 2nd layer
 	g.objects[1] = append(g.objects[1], g.player)

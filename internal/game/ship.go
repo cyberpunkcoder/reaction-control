@@ -166,26 +166,6 @@ func (ship *Ship) FireMissile(g *Game) {
 	release.Play()
 }
 
-// GetLocation of ship
-func (ship *Ship) GetLocation() Location {
-	return ship.Location
-}
-
-// SetLocation of ship
-func (ship *Ship) SetLocation(location Location) {
-	ship.Location = location
-}
-
-// GetSpeed of ship
-func (ship *Ship) GetSpeed() Speed {
-	return ship.Speed
-}
-
-// SetSpeed of ship
-func (ship *Ship) SetSpeed(speed Speed) {
-	ship.Speed = speed
-}
-
 // LThrustersOn left thrusters on
 func (ship *Ship) LThrustersOn() {
 	if !ship.rThrusters && !ship.isMaxSpd() {

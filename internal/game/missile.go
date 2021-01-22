@@ -80,23 +80,3 @@ func (m *Missile) Draw(screen *ebiten.Image, g *Game) {
 	// Draw m not thrusting
 	screen.DrawImage(m.Image.SubImage(image.Rect(0, 0, s, s)).(*ebiten.Image), op)
 }
-
-// GetLocation of m
-func (m *Missile) GetLocation() Location {
-	return m.Location
-}
-
-// SetLocation of m
-func (m *Missile) SetLocation(location Location) {
-	m.Location = location
-}
-
-// GetSpeed of m
-func (m *Missile) GetSpeed() Speed {
-	return m.Speed
-}
-
-// SetSpeed of m
-func (m *Missile) SetSpeed(speed Speed) {
-	m.Speed = speed
-}

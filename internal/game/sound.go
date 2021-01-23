@@ -10,7 +10,7 @@ import (
 
 var (
 	sampleRate = 22050
-	looping    []*audio.Player
+	queue      []*audio.Player
 	missile    *audio.Player
 	missileOff *audio.Player
 	rcs        *audio.Player
@@ -49,4 +49,27 @@ func InitSounds() {
 		// There was a problem loading missile looping
 		log.Fatal(err)
 	}
+}
+
+// Queue an audio player to prevent stacked playing
+func queuePlayer(p *audio.Player) {
+	queue = append(queue, p)
+	p.Rewind()
+	p.Play()
+}
+
+// UnQueue an audio player
+func unQueuePlayer(p *audio.Player) {
+	found := false
+	for i := 0; i < len(queue); i++ {
+		if queue[i] == p {
+			if found {
+				return
+			}
+			found = true
+			queue[i] = queue[len(queue)-1]
+			queue = queue[:len(queue)-1]
+		}
+	}
+	p.Pause()
 }

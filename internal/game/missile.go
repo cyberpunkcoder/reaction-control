@@ -51,15 +51,14 @@ func (m *Missile) Update() {
 
 			if m.time == m.delay {
 				// Start thrusting sound
-				missile.Rewind()
-				missile.Play()
+				queuePlayer(missile)
 			}
 		}
 	} else if m.time == m.delay+m.burn {
 		// Stop thrusting sound
 		missileOff.Rewind()
 		missileOff.Play()
-		missile.Pause()
+		unQueuePlayer(missile)
 	}
 	m.time++
 }

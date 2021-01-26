@@ -183,7 +183,7 @@ func (s *Ship) FireMissile(g *Game) {
 
 // LThrustersOn left thrusters on
 func (s *Ship) LThrustersOn() {
-	if !s.rThrusters && !s.isMaxSpd() {
+	if !s.rThrusters {
 		s.lThrusters = true
 		queuePlayer(rcs)
 	}
@@ -191,15 +191,17 @@ func (s *Ship) LThrustersOn() {
 
 // LThrustersOff left thrusters off
 func (s *Ship) LThrustersOff() {
-	s.lThrusters = false
-	rcsOff.Rewind()
-	rcsOff.Play()
-	unQueuePlayer(rcs)
+	if s.lThrusters {
+		s.lThrusters = false
+		rcsOff.Rewind()
+		rcsOff.Play()
+		unQueuePlayer(rcs)
+	}
 }
 
 // RThrustersOn right thrusters on
 func (s *Ship) RThrustersOn() {
-	if !s.lThrusters && !s.isMaxSpd() {
+	if !s.lThrusters {
 		s.rThrusters = true
 		queuePlayer(rcs)
 	}
@@ -207,15 +209,17 @@ func (s *Ship) RThrustersOn() {
 
 // RThrustersOff right thrusters off
 func (s *Ship) RThrustersOff() {
-	s.rThrusters = false
-	rcsOff.Rewind()
-	rcsOff.Play()
-	unQueuePlayer(rcs)
+	if s.rThrusters {
+		s.rThrusters = false
+		rcsOff.Rewind()
+		rcsOff.Play()
+		unQueuePlayer(rcs)
+	}
 }
 
 // CwThrustersOn clockwise thrusters on
 func (s *Ship) CwThrustersOn() {
-	if !s.cwThrusters && !s.isMaxSpd() {
+	if !s.cwThrusters {
 		s.cwThrusters = true
 		queuePlayer(rcs)
 	}
@@ -223,15 +227,17 @@ func (s *Ship) CwThrustersOn() {
 
 // CwThrustersOff clockwise thruters off
 func (s *Ship) CwThrustersOff() {
-	s.cwThrusters = false
-	rcsOff.Rewind()
-	rcsOff.Play()
-	unQueuePlayer(rcs)
+	if s.cwThrusters {
+		s.cwThrusters = false
+		rcsOff.Rewind()
+		rcsOff.Play()
+		unQueuePlayer(rcs)
+	}
 }
 
 // CcwThrustersOn counter clockwise thrusters on
 func (s *Ship) CcwThrustersOn() {
-	if !s.ccwThrusters && !s.isMaxSpd() {
+	if !s.ccwThrusters {
 		s.ccwThrusters = true
 		queuePlayer(rcs)
 	}
@@ -239,15 +245,17 @@ func (s *Ship) CcwThrustersOn() {
 
 // CcwThrustersOff counter clockwise thrusters off
 func (s *Ship) CcwThrustersOff() {
-	s.ccwThrusters = false
-	rcsOff.Rewind()
-	rcsOff.Play()
-	unQueuePlayer(rcs)
+	if s.ccwThrusters {
+		s.ccwThrusters = false
+		rcsOff.Rewind()
+		rcsOff.Play()
+		unQueuePlayer(rcs)
+	}
 }
 
 // FwdThrustersOn forward thrusters on
 func (s *Ship) FwdThrustersOn() {
-	if !s.fwdThrusters && !s.isMaxSpd() {
+	if !s.fwdThrusters {
 		s.fwdThrusters = true
 		queuePlayer(rcs)
 	}
@@ -255,15 +263,17 @@ func (s *Ship) FwdThrustersOn() {
 
 // FwdThrustersOff forward thrusters off
 func (s *Ship) FwdThrustersOff() {
-	s.fwdThrusters = false
-	rcsOff.Rewind()
-	rcsOff.Play()
-	unQueuePlayer(rcs)
+	if s.fwdThrusters {
+		s.fwdThrusters = false
+		rcsOff.Rewind()
+		rcsOff.Play()
+		unQueuePlayer(rcs)
+	}
 }
 
 // RevThrustersOn reverse thrusters on
 func (s *Ship) RevThrustersOn() {
-	if !s.revThrusters && !s.isMaxSpd() {
+	if !s.revThrusters {
 		s.revThrusters = true
 		queuePlayer(rcs)
 	}
@@ -271,12 +281,18 @@ func (s *Ship) RevThrustersOn() {
 
 // RevThrustersOff reverse thrusters off
 func (s *Ship) RevThrustersOff() {
-	s.revThrusters = false
-	rcsOff.Rewind()
-	rcsOff.Play()
-	unQueuePlayer(rcs)
+	if s.revThrusters {
+		s.revThrusters = false
+		rcsOff.Rewind()
+		rcsOff.Play()
+		unQueuePlayer(rcs)
+	}
 }
 
 func (s *Ship) isMaxSpd() bool {
 	return math.Abs(s.xSpd)+math.Abs(s.ySpd) == s.sMax
+}
+
+func (s *Ship) isMaxRSpd() bool {
+	return math.Abs(s.rSpd) == s.rMax
 }

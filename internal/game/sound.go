@@ -51,25 +51,29 @@ func InitSounds() {
 	}
 }
 
-// Queue an audio player to prevent stacked playing
+// Queue audio player
 func queuePlayer(p *audio.Player) {
 	queue = append(queue, p)
 	p.Rewind()
 	p.Play()
 }
 
-// UnQueue an audio player
+// UnQueue audio player, keep looping if same player is in queue
 func unQueuePlayer(p *audio.Player) {
 	found := false
-	for i := 0; i < len(queue); i++ {
-		if queue[i] == p {
-			if found {
-				return
-			}
-			found = true
-			queue[i] = queue[len(queue)-1]
-			queue = queue[:len(queue)-1]
+	for i := 0; i < len(queue); {
+		if queue[i] != p {
+			i++
+			continue
 		}
+		if found {
+			// Do not pause the sound, the same player is still in queue
+			return
+		}
+		found = true
+		// Remove player from queue and replace it with the last player
+		queue[i] = queue[len(queue)-1]
+		queue = queue[:len(queue)-1]
 	}
 	p.Pause()
 }

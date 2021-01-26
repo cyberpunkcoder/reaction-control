@@ -192,7 +192,9 @@ func (s *Ship) LThrustersOn() {
 // LThrustersOff left thrusters off
 func (s *Ship) LThrustersOff() {
 	s.lThrusters = false
-	queuePlayer(rcs)
+	rcsOff.Rewind()
+	rcsOff.Play()
+	unQueuePlayer(rcs)
 }
 
 // RThrustersOn right thrusters on

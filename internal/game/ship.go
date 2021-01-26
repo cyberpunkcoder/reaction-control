@@ -201,7 +201,7 @@ func (s *Ship) LThrustersOff() {
 
 // RThrustersOn right thrusters on
 func (s *Ship) RThrustersOn() {
-	if !s.lThrusters {
+	if !s.rThrusters {
 		s.rThrusters = true
 		queuePlayer(rcs)
 	}

@@ -13,6 +13,7 @@ type Ship struct {
 	rMax         float64
 	sMax         float64
 	thrust       float64
+	missiles     int
 	lThrusters   bool
 	rThrusters   bool
 	cwThrusters  bool
@@ -29,9 +30,10 @@ func NewShip(p Position, s Speed) *Ship {
 			Position: p,
 			Speed:    s,
 		},
-		rMax:   10,
-		sMax:   5,
-		thrust: 0.02,
+		missiles: 20,
+		rMax:     10,
+		sMax:     5,
+		thrust:   0.02,
 	}
 }
 

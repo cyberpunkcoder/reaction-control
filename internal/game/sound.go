@@ -10,13 +10,18 @@ import (
 
 var (
 	sampleRate = 22050
-	queue      []*audio.Player
-	missile    *audio.Player
+
+	// Sound loops
+	queue   []*audio.Player
+	missile *audio.Player
+	rcs     *audio.Player
+	rocket  *audio.Player
+
+	// Sound effects
 	missileOff *audio.Player
-	rcs        *audio.Player
 	rcsOff     *audio.Player
 	release    *audio.Player
-	rocket     *audio.Player
+	warning    *audio.Player
 )
 
 // InitSounds initialize looping
@@ -44,6 +49,10 @@ func InitSounds() {
 	f, err = ebitenutil.OpenFile("../../assets/release.wav")
 	d, err = wav.Decode(audioContext, f)
 	release, err = audio.NewPlayer(audioContext, d)
+
+	f, err = ebitenutil.OpenFile("../../assets/warning.wav")
+	d, err = wav.Decode(audioContext, f)
+	warning, err = audio.NewPlayer(audioContext, d)
 
 	if err != nil {
 		// There was a problem loading missile looping

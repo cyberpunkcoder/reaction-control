@@ -160,6 +160,10 @@ func (s *Ship) Draw(screen *ebiten.Image, g *Game) {
 func (s *Ship) FireMissile(g *Game) {
 	// Return if ship is out of missiles
 	if s.missiles == 0 {
+		if !warning.IsPlaying() {
+			warning.Rewind()
+			warning.Play()
+		}
 		return
 	}
 	// Alternate missiles appearing from the left and right

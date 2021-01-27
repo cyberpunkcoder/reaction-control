@@ -1,8 +1,6 @@
 package game
 
 import (
-	"math"
-
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -44,7 +42,7 @@ func (vp *ViewPort) Draw(screen *ebiten.Image, g *Game) {
 func (vp *ViewPort) Update() {
 	vp.xPos += vp.xSpd
 	vp.yPos += vp.ySpd
-	vp.rPos += vp.ySpd
+	vp.rPos += vp.rSpd
 }
 
 // Follow object
@@ -61,6 +59,7 @@ func (vp *ViewPort) FollowAhead(o Object) {
 
 // FollowSmart follows an object based on its speed and direction
 func (vp *ViewPort) FollowSmart(o Object) {
-	vp.xSpd += o.xSpd * math.Abs(vp.xPos-o.xPos)
-	vp.ySpd += o.ySpd * math.Abs(vp.yPos-o.yPos)
+	vp.xPos = o.xPos
+	vp.yPos = o.yPos
+	vp.rPos = o.rPos
 }

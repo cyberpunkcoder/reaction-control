@@ -1,6 +1,7 @@
 package game
 
 import (
+	"math"
 	"os"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -145,14 +146,24 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	x := (g.viewPort.xPos - float64(w)) - float64(int(g.viewPort.xPos)%w)
 	y := (g.viewPort.yPos - float64(h)) - float64(int(g.viewPort.yPos)%h)
 
-	// Draw background only where viewport is
-	for i := x; i < g.viewPort.xPos+g.viewPort.width; i += float64(w) {
-		for j := y; j < g.viewPort.yPos+g.viewPort.height; j += float64(h) {
-			op := &ebiten.DrawImageOptions{}
-			op.GeoM.Translate(i-g.viewPort.xPos, j-g.viewPort.yPos)
-			screen.DrawImage(space, op)
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(-g.viewPort.xPos, -g.viewPort.yPos)
+	op.GeoM.Rotate(-g.viewPort.rPos * 2 * math.Pi / 360)
+	op.GeoM.Translate(g.viewPort.width/2, g.viewPort.height/2)
+	screen.DrawImage(space, op)
+
+	/*
+		// Draw background only where viewport is
+		for i := x; i < g.viewPort.xPos+g.viewPort.width; i += float64(w) {
+			for j := y; j < g.viewPort.yPos+g.viewPort.height; j += float64(h) {
+				op := &ebiten.DrawImageOptions{}
+				op.GeoM.Translate(-float64(w)/2, -float64(h)/2)
+				op.GeoM.Rotate(-g.viewPort.rPos)
+				op.GeoM.Translate((i-g.viewPort.xPos)*math.Cos(radAng), (j-g.viewPort.yPos)*math.Sin(radAng))
+				screen.DrawImage(space, op)
+			}
 		}
-	}
+	*/
 
 	// Draw objects according to their layer
 	for layer := 0; layer < len(g.elements); layer++ {

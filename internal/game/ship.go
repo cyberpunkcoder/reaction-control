@@ -107,12 +107,13 @@ func (s *Ship) Draw(screen *ebiten.Image, g *Game) {
 
 	w, h := s.Image.Size()
 	op.GeoM.Translate(-float64(w)/2, -float64(h)/2)
-	op.GeoM.Rotate(float64(s.rPos) * 2 * math.Pi / 360)
 
 	x := (s.xPos - g.viewPort.xPos) + (g.viewPort.width / 2)
 	y := (s.yPos - g.viewPort.yPos) + (g.viewPort.height / 2)
+	r := (s.rPos - g.viewPort.rPos)
 
 	op.GeoM.Translate(x, y)
+	op.GeoM.Rotate(r * 2 * math.Pi / 360)
 	screen.DrawImage(s.Image, op)
 
 	frame := (g.count / 2) % 2

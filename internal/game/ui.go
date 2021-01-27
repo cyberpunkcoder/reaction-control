@@ -1,10 +1,16 @@
 package game
 
-import "github.com/hajimehoshi/ebiten/v2"
+import (
+	"math"
+
+	"github.com/hajimehoshi/ebiten/v2"
+)
 
 // ViewPort a player sees through
 type ViewPort struct {
+	Element
 	Position
+	Speed
 	width, height float64
 }
 
@@ -29,6 +35,18 @@ func NewViewPort(p Position) *ViewPort {
 	return &vp
 }
 
+// Draw the viewport on screen in gamegi
+func (vp *ViewPort) Draw(screen *ebiten.Image, g *Game) {
+
+}
+
+// Update the ship state
+func (vp *ViewPort) Update() {
+	vp.xPos += vp.xSpd
+	vp.yPos += vp.ySpd
+	vp.rPos += vp.ySpd
+}
+
 // Follow object
 func (vp *ViewPort) Follow(o Object) {
 	vp.xPos = o.xPos
@@ -39,4 +57,10 @@ func (vp *ViewPort) Follow(o Object) {
 func (vp *ViewPort) FollowAhead(o Object) {
 	vp.xPos = o.xPos + (o.xSpd * (vp.width / 16))
 	vp.yPos = o.yPos + (o.ySpd * (vp.height / 16))
+}
+
+// FollowSmart follows an object based on its speed and direction
+func (vp *ViewPort) FollowSmart(o Object) {
+	vp.xSpd += o.xSpd * math.Abs(vp.xPos-o.xPos)
+	vp.ySpd += o.ySpd * math.Abs(vp.yPos-o.yPos)
 }

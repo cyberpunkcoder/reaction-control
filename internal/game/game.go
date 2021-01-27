@@ -66,6 +66,9 @@ func (g *Game) init() {
 	g.player = NewShip(Position{}, Speed{})
 	g.viewPort = NewViewPort(g.player.Position)
 
+	// Put viewport on top layer
+	g.elements[2] = append(g.elements[2], g.viewPort)
+
 	// Put ship on 2nd layer
 	g.elements[1] = append(g.elements[1], g.player)
 }
@@ -132,7 +135,7 @@ func (g *Game) Update() error {
 		}
 	}
 
-	g.viewPort.FollowAhead(g.player.Object)
+	g.viewPort.FollowSmart(g.player.Object)
 	return nil
 }
 

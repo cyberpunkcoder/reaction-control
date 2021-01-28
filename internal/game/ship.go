@@ -41,7 +41,7 @@ func NewShip(p Position, s Speed) *Ship {
 func (s *Ship) Update() {
 	s.xPos += s.xSpd
 	s.yPos += s.ySpd
-	s.rPos = math.Mod(s.rPos+s.rSpd, 360)
+	s.rPos += s.rSpd
 
 	if s.lThrusters {
 		radAng := (s.rPos + 180) * (math.Pi / 180)
@@ -101,22 +101,17 @@ func (s *Ship) Update() {
 }
 
 // Draw the ship on screen in game
-func (s *Ship) Draw(screen *ebiten.Image, g *Game) {
-
-	op := &ebiten.DrawImageOptions{}
-
+func (s *Ship) Draw(screen *ebiten.Image, op *ebiten.DrawImageOptions, g *Game) {
 	w, h := s.Image.Size()
-	op.GeoM.Translate(-float64(w)/2, -float64(h)/2)
-
-	x := (s.xPos - g.viewPort.xPos) + (g.viewPort.width / 2)
-	y := (s.yPos - g.viewPort.yPos) + (g.viewPort.height / 2)
-	r := (s.rPos - g.viewPort.rPos)
-
-	op.GeoM.Translate(x, y)
-	op.GeoM.Rotate(r * 2 * math.Pi / 360)
-	screen.DrawImage(s.Image, op)
-
 	frame := (g.count / 2) % 2
+
+	op.GeoM.Reset()
+	op.GeoM.Translate(-float64(w)/2, -float64(h)/2)
+	op.GeoM.Rotate(s.rPos * 2 * math.Pi / 360)
+	op.GeoM.Translate(s.xPos, s.yPos)
+	g.viewPort.Orient(op)
+
+	screen.DrawImage(s.Image, op)
 
 	if s.lThrusters {
 		screen.DrawImage(rcsl.SubImage(image.Rect(frame*w, 0, w+(frame*w), h)).(*ebiten.Image), op)

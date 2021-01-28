@@ -1,7 +1,6 @@
 package game
 
 import (
-	"math"
 	"os"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -25,7 +24,7 @@ type Speed struct {
 // Element within the game
 type Element interface {
 	Update()
-	Draw(*ebiten.Image, *Game)
+	Draw(screen *ebiten.Image, op *ebiten.DrawImageOptions, g *Game)
 }
 
 // Object in the game
@@ -66,10 +65,6 @@ func (g *Game) init() {
 	// Create player ship
 	g.player = NewShip(Position{}, Speed{})
 	g.viewPort = NewViewPort(g.player.Position)
-
-	// Put viewport on top layer
-	g.elements[2] = append(g.elements[2], g.viewPort)
-
 	// Put ship on 2nd layer
 	g.elements[1] = append(g.elements[1], g.player)
 }
@@ -136,39 +131,28 @@ func (g *Game) Update() error {
 		}
 	}
 
-	g.viewPort.FollowSmart(g.player.Object)
+	g.viewPort.FollowAheadXYR(g.player.Object)
 	return nil
 }
 
 // Draw the screen
 func (g *Game) Draw(screen *ebiten.Image) {
 	w, h := space.Size()
-	x := (g.viewPort.xPos - float64(w)) - float64(int(g.viewPort.xPos)%w)
-	y := (g.viewPort.yPos - float64(h)) - float64(int(g.viewPort.yPos)%h)
+	//x := (g.viewPort.xPos - float64(w)) - float64(int(g.viewPort.xPos)%w)
+	//y := (g.viewPort.yPos - float64(h)) - float64(int(g.viewPort.yPos)%h)
 
 	op := &ebiten.DrawImageOptions{}
-	op.GeoM.Translate(-g.viewPort.xPos, -g.viewPort.yPos)
-	op.GeoM.Rotate(-g.viewPort.rPos * 2 * math.Pi / 360)
-	op.GeoM.Translate(g.viewPort.width/2, g.viewPort.height/2)
+	g.viewPort.Orient(op)
 	screen.DrawImage(space, op)
-
-	/*
-		// Draw background only where viewport is
-		for i := x; i < g.viewPort.xPos+g.viewPort.width; i += float64(w) {
-			for j := y; j < g.viewPort.yPos+g.viewPort.height; j += float64(h) {
-				op := &ebiten.DrawImageOptions{}
-				op.GeoM.Translate(-float64(w)/2, -float64(h)/2)
-				op.GeoM.Rotate(-g.viewPort.rPos)
-				op.GeoM.Translate((i-g.viewPort.xPos)*math.Cos(radAng), (j-g.viewPort.yPos)*math.Sin(radAng))
-				screen.DrawImage(space, op)
-			}
-		}
-	*/
+	op.GeoM.Reset()
+	op.GeoM.Translate(float64(-w), float64(-h))
+	g.viewPort.Orient(op)
+	screen.DrawImage(space, op)
 
 	// Draw objects according to their layer
 	for layer := 0; layer < len(g.elements); layer++ {
 		for _, o := range g.elements[layer] {
-			o.Draw(screen, g)
+			o.Draw(screen, op, g)
 		}
 	}
 }
@@ -181,9 +165,4 @@ func (g *Game) Start() {
 	if err := ebiten.RunGame(newGame()); err != nil {
 		panic(err)
 	}
-}
-
-// ApplyForce to an object of value f, at p Position
-func (o *Object) ApplyForce(f float64, p Position) {
-
 }

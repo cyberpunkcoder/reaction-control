@@ -64,18 +64,15 @@ func (m *Missile) Update() {
 }
 
 // Draw the missile
-func (m *Missile) Draw(screen *ebiten.Image, g *Game) {
-	op := &ebiten.DrawImageOptions{}
-	frame := ((g.count / 2) % 2) + 1
-
-	_, s := m.Image.Size()
+func (m *Missile) Draw(screen *ebiten.Image, op *ebiten.DrawImageOptions, g *Game) {
+	op.GeoM.Reset()
 	op.GeoM.Translate(-4, -3)
-	op.GeoM.Rotate(float64(m.rPos) * 2 * math.Pi / 360)
+	op.GeoM.Rotate(m.rPos * 2 * math.Pi / 360)
+	op.GeoM.Translate(m.xPos, m.yPos)
+	g.viewPort.Orient(op)
 
-	x := (m.xPos - g.viewPort.xPos) + (g.viewPort.width / 2)
-	y := (m.yPos - g.viewPort.yPos) + (g.viewPort.height / 2)
-
-	op.GeoM.Translate(x, y)
+	frame := ((g.count / 2) % 2) + 1
+	_, s := m.Image.Size()
 
 	if m.time > m.delay && m.time < m.delay+m.burn {
 		// Draw missile thrusting

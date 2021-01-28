@@ -131,17 +131,21 @@ func (g *Game) Update() error {
 		}
 	}
 
-	g.viewPort.FollowAheadXYR(g.player.Object)
+	g.viewPort.LockXYR(g.player.Object)
 	return nil
 }
 
 // Draw the screen
 func (g *Game) Draw(screen *ebiten.Image) {
 	w, h := space.Size()
-	//x := (g.viewPort.xPos - float64(w)) - float64(int(g.viewPort.xPos)%w)
-	//y := (g.viewPort.yPos - float64(h)) - float64(int(g.viewPort.yPos)%h)
 
 	op := &ebiten.DrawImageOptions{}
+
+	xMin := g.viewPort.xPos - (g.viewPort.width / 2)
+	yMin := g.viewPort.yPos - (g.viewPort.height / 2)
+	xMax := g.viewPort.xPos + (g.viewPort.width / 2)
+	yMax := g.viewPort.yPos + (g.viewPort.height / 2)
+
 	g.viewPort.Orient(op)
 	screen.DrawImage(space, op)
 	op.GeoM.Reset()
@@ -155,6 +159,22 @@ func (g *Game) Draw(screen *ebiten.Image) {
 			o.Draw(screen, op, g)
 		}
 	}
+
+	op.GeoM.Reset()
+
+	w, h = shipImage.Size()
+	op.GeoM.Translate(-float64(w)/2, -float64(h)/2)
+
+	op.GeoM.Translate(xMin, yMin)
+	g.viewPort.Orient(op)
+	screen.DrawImage(shipImage, op)
+	op.GeoM.Reset()
+
+	op.GeoM.Translate(-float64(w)/2, -float64(h)/2)
+
+	op.GeoM.Translate(xMax, yMax)
+	g.viewPort.Orient(op)
+	screen.DrawImage(shipImage, op)
 }
 
 // Start the game

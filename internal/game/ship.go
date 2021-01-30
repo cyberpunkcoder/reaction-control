@@ -30,7 +30,7 @@ func NewShip(p Position, s Speed) *Ship {
 			Position: p,
 			Speed:    s,
 		},
-		missiles: 20,
+		missiles: 50,
 		rMax:     10,
 		sMax:     5,
 		thrust:   0.02,

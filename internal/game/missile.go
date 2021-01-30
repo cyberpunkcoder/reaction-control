@@ -31,7 +31,7 @@ func NewMissile(p Position, s Speed) *Missile {
 		time:   0,
 		delay:  30,
 		burn:   50,
-		thrust: 0.05,
+		thrust: 0.1,
 	}
 }
 

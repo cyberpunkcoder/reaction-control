@@ -1,6 +1,7 @@
 package game
 
 import (
+	"math"
 	"os"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -131,7 +132,7 @@ func (g *Game) Update() error {
 		}
 	}
 
-	g.viewPort.LockXYR(g.player.Object)
+	g.viewPort.FollowAheadXYR(g.player.Object)
 	return nil
 }
 
@@ -139,19 +140,28 @@ func (g *Game) Update() error {
 func (g *Game) Draw(screen *ebiten.Image) {
 	w, h := space.Size()
 
-	op := &ebiten.DrawImageOptions{}
-
 	xMin := g.viewPort.xPos - (g.viewPort.width / 2)
 	yMin := g.viewPort.yPos - (g.viewPort.height / 2)
 	xMax := g.viewPort.xPos + (g.viewPort.width / 2)
 	yMax := g.viewPort.yPos + (g.viewPort.height / 2)
 
-	g.viewPort.Orient(op)
-	screen.DrawImage(space, op)
-	op.GeoM.Reset()
-	op.GeoM.Translate(float64(-w), float64(-h))
-	g.viewPort.Orient(op)
-	screen.DrawImage(space, op)
+	xMin = math.Round((xMin-float64(w))/float64(w)) * float64(w)
+	xMax = math.Round((xMax+float64(w))/float64(w)) * float64(w)
+	yMin = math.Round((yMin-float64(h))/float64(h)) * float64(h)
+	yMax = math.Round((yMax+float64(h))/float64(h)) * float64(h)
+
+	op := &ebiten.DrawImageOptions{}
+
+	for x := xMin; x < xMax; x += float64(w) {
+		for y := yMin; y < yMax; y += float64(h) {
+			//fmt.Println(x, y)
+			op.GeoM.Reset()
+			op.GeoM.Translate(x, y)
+			g.viewPort.Orient(op)
+			screen.DrawImage(space, op)
+		}
+	}
+	//fmt.Println()
 
 	// Draw objects according to their layer
 	for layer := 0; layer < len(g.elements); layer++ {
@@ -160,21 +170,24 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		}
 	}
 
-	op.GeoM.Reset()
+	// Testing viewport boundaries
+	/*
+		op.GeoM.Reset()
 
-	w, h = shipImage.Size()
-	op.GeoM.Translate(-float64(w)/2, -float64(h)/2)
+		w, h = shipImage.Size()
+		op.GeoM.Translate(-float64(w)/2, -float64(h)/2)
 
-	op.GeoM.Translate(xMin, yMin)
-	g.viewPort.Orient(op)
-	screen.DrawImage(shipImage, op)
-	op.GeoM.Reset()
+		op.GeoM.Translate(xMin, yMin)
+		g.viewPort.Orient(op)
+		screen.DrawImage(shipImage, op)
+		op.GeoM.Reset()
 
-	op.GeoM.Translate(-float64(w)/2, -float64(h)/2)
+		op.GeoM.Translate(-float64(w)/2, -float64(h)/2)
 
-	op.GeoM.Translate(xMax, yMax)
-	g.viewPort.Orient(op)
-	screen.DrawImage(shipImage, op)
+		op.GeoM.Translate(xMax, yMax)
+		g.viewPort.Orient(op)
+		screen.DrawImage(shipImage, op)
+	*/
 }
 
 // Start the game

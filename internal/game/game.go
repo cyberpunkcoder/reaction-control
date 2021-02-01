@@ -140,7 +140,7 @@ func (g *Game) Update() error {
 func (g *Game) Draw(screen *ebiten.Image) {
 	bgW, bgH := space.Size()
 	// Offset each background tile one pixel to stop alias gap
-	w, h := float64(bgW)-1, float64(bgH)-1
+	w, h := float64(bgW-1), float64(bgH-1)
 
 	vpMaxX, vpMaxY := g.viewPort.Max()
 

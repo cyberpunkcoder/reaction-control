@@ -138,30 +138,28 @@ func (g *Game) Update() error {
 
 // Draw the screen
 func (g *Game) Draw(screen *ebiten.Image) {
-	w, h := space.Size()
+	bgW, bgH := space.Size()
+	// Size background tiles down one pixel to prevent alias gap
+	w, h := float64(bgW)-1, float64(bgH)-1
 
-	xMin := g.viewPort.xPos - (g.viewPort.width / 2)
-	yMin := g.viewPort.yPos - (g.viewPort.height / 2)
-	xMax := g.viewPort.xPos + (g.viewPort.width / 2)
-	yMax := g.viewPort.yPos + (g.viewPort.height / 2)
+	vpMaxX, vpMaxY := g.viewPort.Max()
 
-	xMin = math.Round((xMin-float64(w))/float64(w)) * float64(w)
-	xMax = math.Round((xMax+float64(w))/float64(w)) * float64(w)
-	yMin = math.Round((yMin-float64(h))/float64(h)) * float64(h)
-	yMax = math.Round((yMax+float64(h))/float64(h)) * float64(h)
+	xMin := math.Floor((g.viewPort.xPos-vpMaxX)/w) * w
+	xMax := math.Ceil((g.viewPort.xPos+vpMaxX)/w) * w
+	yMin := math.Floor((g.viewPort.yPos-vpMaxY)/h) * h
+	yMax := math.Ceil((g.viewPort.yPos+vpMaxY)/h) * h
 
 	op := &ebiten.DrawImageOptions{}
 
-	for x := xMin; x < xMax; x += float64(w) {
-		for y := yMin; y < yMax; y += float64(h) {
-			//fmt.Println(x, y)
+	// Draw background only where needed
+	for x := xMin; x < xMax; x += w {
+		for y := yMin; y < yMax; y += h {
 			op.GeoM.Reset()
 			op.GeoM.Translate(x, y)
 			g.viewPort.Orient(op)
 			screen.DrawImage(space, op)
 		}
 	}
-	//fmt.Println()
 
 	// Draw objects according to their layer
 	for layer := 0; layer < len(g.elements); layer++ {
@@ -169,25 +167,6 @@ func (g *Game) Draw(screen *ebiten.Image) {
 			o.Draw(screen, op, g)
 		}
 	}
-
-	// Testing viewport boundaries
-	/*
-		op.GeoM.Reset()
-
-		w, h = shipImage.Size()
-		op.GeoM.Translate(-float64(w)/2, -float64(h)/2)
-
-		op.GeoM.Translate(xMin, yMin)
-		g.viewPort.Orient(op)
-		screen.DrawImage(shipImage, op)
-		op.GeoM.Reset()
-
-		op.GeoM.Translate(-float64(w)/2, -float64(h)/2)
-
-		op.GeoM.Translate(xMax, yMax)
-		g.viewPort.Orient(op)
-		screen.DrawImage(shipImage, op)
-	*/
 }
 
 // Start the game

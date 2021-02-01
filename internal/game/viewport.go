@@ -70,3 +70,14 @@ func (vp *ViewPort) FollowAheadXYR(o Object) {
 	vp.yPos = o.yPos + (o.ySpd * (vp.height / 16))
 	vp.rPos = o.rPos + (o.rSpd * (vp.height / 16))
 }
+
+// Max position visible on viewport
+func (vp *ViewPort) Max() (float64, float64) {
+	w, h := vp.width/2, vp.height/2
+	radAng := vp.rPos * (math.Pi / 180)
+
+	x := math.Abs(w*math.Cos(radAng)) - math.Min(h*math.Sin(radAng), -h*math.Sin(radAng))
+	y := math.Abs(w*math.Sin(radAng)) + math.Max(h*math.Cos(radAng), -h*math.Cos(radAng))
+
+	return x, y
+}

@@ -29,7 +29,7 @@ func NewMissile(p Position, s Speed) *Missile {
 			Speed:    s,
 			Image:    missileImage},
 		time:   0,
-		delay:  30,
+		delay:  25,
 		burn:   50,
 		thrust: 0.1,
 	}

@@ -28,6 +28,19 @@ type Element interface {
 	Draw(screen *ebiten.Image, op *ebiten.DrawImageOptions, g *Game)
 }
 
+// Character in the game
+type Character interface {
+	Up()
+	Down()
+	Left()
+	Right()
+	Cw()
+	Ccw()
+	Attack()
+	AltAttack()
+	Die()
+}
+
 // Object in the game
 type Object struct {
 	Element

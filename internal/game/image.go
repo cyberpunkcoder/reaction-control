@@ -25,18 +25,19 @@ var (
 // InitImages initialize game images
 func InitImages() {
 
-	shipImage, _, err = ebitenutil.NewImageFromFile("../../assets/player.png")
-	alienImage, _, err = ebitenutil.NewImageFromFile("../../assets/alien.png")
-	missileImage, _, err = ebitenutil.NewImageFromFile("../../assets/missile.png")
-	fusionImage, _, err = ebitenutil.NewImageFromFile("../../assets/fusion.png")
-	rcsl, _, err = ebitenutil.NewImageFromFile("../../assets/rcsl.png")
-	rcsr, _, err = ebitenutil.NewImageFromFile("../../assets/rcsr.png")
-	rcsfl, _, err = ebitenutil.NewImageFromFile("../../assets/rcsfl.png")
-	rcsfr, _, err = ebitenutil.NewImageFromFile("../../assets/rcsfr.png")
-	rcsbl, _, err = ebitenutil.NewImageFromFile("../../assets/rcsbl.png")
-	rcsbr, _, err = ebitenutil.NewImageFromFile("../../assets/rcsbr.png")
-	space, _, err = ebitenutil.NewImageFromFile("../../assets/space.png")
+	mustLoadImageFromFile(shipImage, "../../assets/player.png")
+	mustLoadImageFromFile(alienImage, "../../assets/alien.png")
+	mustLoadImageFromFile(missileImage, "../../assets/missile.png")
+	mustLoadImageFromFile(fusionImage, "../../assets/fusion.png")
+	mustLoadImageFromFile(rcsl, "../../assets/rcsl.png")
+	mustLoadImageFromFile(rcsr, "../../assets/rcsr.png")
+	mustLoadImageFromFile(rcsbl, "../../assets/rcsbl.png")
+	mustLoadImageFromFile(rcsbr, "../../assets/rcsbr.png")
+	mustLoadImageFromFile(space, "../../assets/space.png")
+}
 
+func mustLoadImageFromFile(img *ebiten.Image, imgPath string) {
+	img, _, err := ebitenutil.NewImageFromFile(imgPath)
 	if err != nil {
 		log.Fatal(err)
 	}

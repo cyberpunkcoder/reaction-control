@@ -19,12 +19,12 @@ func NewViewPort(p Position) *ViewPort {
 	w, h := ebiten.ScreenSizeInFullscreen()
 
 	// Scale up game for monitor size
-	zoom := 3
+	zoom := 2
 
 	if w > 1920 {
-		zoom = 5
-	} else if w > 1024 {
 		zoom = 4
+	} else if w > 1024 {
+		zoom = 3
 	}
 
 	vp := ViewPort{

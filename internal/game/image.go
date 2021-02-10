@@ -10,6 +10,8 @@ import (
 
 var (
 	shipImage    *ebiten.Image
+	alienImage   *ebiten.Image
+	fusionImage  *ebiten.Image
 	missileImage *ebiten.Image
 	rcsl         *ebiten.Image
 	rcsr         *ebiten.Image
@@ -24,7 +26,9 @@ var (
 func InitImages() {
 
 	shipImage, _, err = ebitenutil.NewImageFromFile("../../assets/player.png")
+	alienImage, _, err = ebitenutil.NewImageFromFile("../../assets/alien.png")
 	missileImage, _, err = ebitenutil.NewImageFromFile("../../assets/missile.png")
+	fusionImage, _, err = ebitenutil.NewImageFromFile("../../assets/fusion.png")
 	rcsl, _, err = ebitenutil.NewImageFromFile("../../assets/rcsl.png")
 	rcsr, _, err = ebitenutil.NewImageFromFile("../../assets/rcsr.png")
 	rcsfl, _, err = ebitenutil.NewImageFromFile("../../assets/rcsfl.png")

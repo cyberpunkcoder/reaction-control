@@ -161,6 +161,12 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		}
 	}
 
+	op.GeoM.Reset()
+	op.GeoM.Translate(-16, -128)
+	g.viewPort.Orient(op)
+	screen.DrawImage(fusionImage, op)
+	screen.DrawImage(alienImage, op)
+
 	// Draw objects according to their layer
 	for layer := 0; layer < len(g.elements); layer++ {
 		for _, o := range g.elements[layer] {

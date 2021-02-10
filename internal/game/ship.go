@@ -22,8 +22,8 @@ type Ship struct {
 	revThrusters bool
 }
 
-// NewShip is initialized and returned
-func NewShip(p Position, s Speed) *Ship {
+// CreateShip is initialized and returned
+func CreateShip(p Position, s Speed) *Ship {
 	return &Ship{
 		Object: Object{
 			Image:    shipImage,
@@ -171,7 +171,7 @@ func (s *Ship) FireMissile(g *Game) {
 	pos.yPos += offset * math.Sin(radAng)
 	s.missiles--
 
-	missile := NewMissile(pos, g.player.Speed)
+	missile := CreateMissile(pos, g.player.Speed)
 	g.elements[0] = append(g.elements[0], missile)
 	release.Rewind()
 	release.Play()

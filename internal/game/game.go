@@ -77,7 +77,7 @@ func (g *Game) init() {
 	g.elements = make([][]Element, 3)
 
 	// Create player ship
-	g.player = NewShip(Position{}, Speed{})
+	g.player = CreateShip(Position{}, Speed{})
 	g.viewPort = NewViewPort(g.player.Position)
 	// Put ship on 2nd layer
 	g.elements[1] = append(g.elements[1], g.player)
@@ -174,11 +174,14 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		}
 	}
 
-	op.GeoM.Reset()
-	op.GeoM.Translate(-16, -128)
-	g.viewPort.Orient(op)
-	screen.DrawImage(fusionImage, op)
-	screen.DrawImage(alienImage, op)
+	// Uncomment if you want to see an alien! :)
+	/*
+		op.GeoM.Reset()
+		op.GeoM.Translate(-16, -128)
+		g.viewPort.Orient(op)
+		screen.DrawImage(fusionImage, op)
+		screen.DrawImage(alienImage, op)
+	*/
 
 	// Draw objects according to their layer
 	for layer := 0; layer < len(g.elements); layer++ {

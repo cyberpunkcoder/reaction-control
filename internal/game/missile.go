@@ -16,8 +16,8 @@ type Missile struct {
 	thrust float64
 }
 
-// NewMissile created at position with speed
-func NewMissile(p Position, s Speed) *Missile {
+// CreateMissile created at position with speed
+func CreateMissile(p Position, s Speed) *Missile {
 	// Initial missile ejection speed
 	radAng := (p.rPos + 90) * (math.Pi / 180)
 	s.xSpd = s.xSpd - 1*math.Cos(radAng)

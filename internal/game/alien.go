@@ -19,7 +19,7 @@ func CreateAlien(p Position, s Speed) Alien {
 
 // Update the alien state
 func (a *Alien) Update() {
-
+	a.NewtonsFirstLaw()
 }
 
 // Draw the alien

@@ -37,9 +37,7 @@ func CreateMissile(p Position, s Speed) *Missile {
 
 // Update the missile state
 func (m *Missile) Update() {
-	m.xPos += m.xSpd
-	m.yPos += m.ySpd
-	m.rPos += m.rSpd
+	m.NewtonsFirstLaw()
 
 	// Check if missile is active
 	if m.time < m.delay+m.burn {

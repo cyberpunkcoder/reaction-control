@@ -39,9 +39,7 @@ func CreateShip(p Position, s Speed) *Ship {
 
 // Update the ship state
 func (s *Ship) Update() {
-	s.xPos += s.xSpd
-	s.yPos += s.ySpd
-	s.rPos += s.rSpd
+	s.NewtonsFirstLaw()
 
 	if s.lThrusters {
 		radAng := (s.rPos + 180) * (math.Pi / 180)

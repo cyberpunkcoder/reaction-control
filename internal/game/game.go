@@ -200,3 +200,10 @@ func (g *Game) Start() {
 		panic(err)
 	}
 }
+
+// NewtonsFirstLaw states that an object will stay in motion
+func (o *Object) NewtonsFirstLaw() {
+	o.xPos += o.xSpd
+	o.yPos += o.ySpd
+	o.rPos += o.rSpd
+}

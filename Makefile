@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := default
 
 .PHONY: default
-default: build 
+default: build
 
 .PHONY: cook-rice
 cook-rice:

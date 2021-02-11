@@ -25,7 +25,7 @@ var (
 )
 
 // InitImages initialize game images
-func InitImages(imgBox *rice.Box) {
+func initImages(imgBox *rice.Box) {
 	shipImage = mustLoadImage(imgBox, "ship.png")
 	alienImage = mustLoadImage(imgBox, "alien.png")
 	missileImage = mustLoadImage(imgBox, "missile.png")

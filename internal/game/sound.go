@@ -26,7 +26,7 @@ var (
 )
 
 // InitSounds initialize looping
-func InitSounds(soundBox *rice.Box) {
+func initSounds(soundBox *rice.Box) {
 	audioContext := audio.NewContext(sampleRate)
 
 	d := mustLoadSoundAsStream(soundBox, "rcs.wav", audioContext)

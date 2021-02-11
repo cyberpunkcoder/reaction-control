@@ -72,7 +72,7 @@ func mustLoadSoundAsStream(soundBox *rice.Box, soundFileName string, audioContex
 	soundFile := bytes.NewReader(soundBox.MustBytes(soundFileName))
 	d, err := wav.Decode(audioContext, soundFile)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Unable to decode sound %s: %v\n", soundFileName, err)
 	}
 
 	return d

@@ -1,9 +1,11 @@
 package game
 
 import (
+	"log"
 	"math"
 	"os"
 
+	rice "github.com/GeertJohan/go.rice"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
@@ -59,8 +61,12 @@ type Game struct {
 }
 
 func init() {
-	InitImages()
-	InitSounds()
+	assetsBox, err := rice.FindBox("../../assets")
+	if err != nil {
+		log.Fatalf("Unable to initialise assets rice box...: %v\n", err)
+	}
+	InitImages(assetsBox)
+	InitSounds(assetsBox)
 }
 
 func newGame() *Game {

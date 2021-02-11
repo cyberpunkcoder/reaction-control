@@ -1,11 +1,13 @@
 package game
 
 import (
+	"bytes"
+	"image"
 	_ "image/png" // Required for ebitenutil.NewImageFromFile()
 	"log"
 
+	rice "github.com/GeertJohan/go.rice"
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
 
 var (
@@ -23,25 +25,29 @@ var (
 )
 
 // InitImages initialize game images
-func InitImages() {
-
-	shipImage = mustLoadImageFromFile("../../assets/ship.png")
-	alienImage = mustLoadImageFromFile("../../assets/alien.png")
-	missileImage = mustLoadImageFromFile("../../assets/missile.png")
-	fusionImage = mustLoadImageFromFile("../../assets/fusion.png")
-	rcsl = mustLoadImageFromFile("../../assets/rcsl.png")
-	rcsfr = mustLoadImageFromFile("../../assets/rcsfr.png")
-	rcsfl = mustLoadImageFromFile("../../assets/rcsfl.png")
-	rcsr = mustLoadImageFromFile("../../assets/rcsr.png")
-	rcsbl = mustLoadImageFromFile("../../assets/rcsbl.png")
-	rcsbr = mustLoadImageFromFile("../../assets/rcsbr.png")
-	space = mustLoadImageFromFile("../../assets/space.png")
+func InitImages(imgBox *rice.Box) {
+	shipImage = mustLoadImage(imgBox, "ship.png")
+	alienImage = mustLoadImage(imgBox, "alien.png")
+	missileImage = mustLoadImage(imgBox, "missile.png")
+	fusionImage = mustLoadImage(imgBox, "alien.png")
+	rcsl = mustLoadImage(imgBox, "rcsl.png")
+	rcsfr = mustLoadImage(imgBox, "rcsfr.png")
+	rcsfl = mustLoadImage(imgBox, "rcsfl.png")
+	rcsr = mustLoadImage(imgBox, "rcsr.png")
+	rcsbl = mustLoadImage(imgBox, "rcsbl.png")
+	rcsbr = mustLoadImage(imgBox, "rcsbr.png")
+	space = mustLoadImage(imgBox, "space.png")
 }
 
-func mustLoadImageFromFile(imgPath string) *ebiten.Image {
-	img, _, err := ebitenutil.NewImageFromFile(imgPath)
+func mustLoadImage(imgBox *rice.Box, imgFileName string) *ebiten.Image {
+	imgBytes := bytes.NewReader(imgBox.MustBytes(imgFileName))
+
+	img, _, err := image.Decode(imgBytes)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Unable to decode image %s: %v\n", imgFileName, err)
 	}
-	return img
+
+	img2 := ebiten.NewImageFromImage(img)
+
+	return img2
 }

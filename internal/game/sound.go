@@ -1,11 +1,12 @@
 package game
 
 import (
+	"bytes"
 	"log"
 
+	rice "github.com/GeertJohan/go.rice"
 	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2/audio/wav"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
 
 var (
@@ -25,39 +26,56 @@ var (
 )
 
 // InitSounds initialize looping
-func InitSounds() {
+func InitSounds(soundBox *rice.Box) {
 	audioContext := audio.NewContext(sampleRate)
 
-	f, err := ebitenutil.OpenFile("../../assets/rcs.wav")
-	d, err := wav.Decode(audioContext, f)
+	d := mustLoadSoundAsStream(soundBox, "rcs.wav", audioContext)
 	sound := audio.NewInfiniteLoopWithIntro(d, 1*4*int64(sampleRate), 5*4*int64(sampleRate))
 	rcs, err = audio.NewPlayer(audioContext, sound)
-
-	f, err = ebitenutil.OpenFile("../../assets/missile.wav")
-	d, err = wav.Decode(audioContext, f)
-	sound = audio.NewInfiniteLoopWithIntro(d, 2*4*int64(sampleRate), 4*4*int64(sampleRate))
-	missile, err = audio.NewPlayer(audioContext, sound)
-
-	f, err = ebitenutil.OpenFile("../../assets/rcsoff.wav")
-	d, err = wav.Decode(audioContext, f)
-	rcsOff, err = audio.NewPlayer(audioContext, d)
-
-	f, err = ebitenutil.OpenFile("../../assets/missileoff.wav")
-	d, err = wav.Decode(audioContext, f)
-	missileOff, err = audio.NewPlayer(audioContext, d)
-
-	f, err = ebitenutil.OpenFile("../../assets/release.wav")
-	d, err = wav.Decode(audioContext, f)
-	release, err = audio.NewPlayer(audioContext, d)
-
-	f, err = ebitenutil.OpenFile("../../assets/warning.wav")
-	d, err = wav.Decode(audioContext, f)
-	warning, err = audio.NewPlayer(audioContext, d)
-
 	if err != nil {
-		// There was a problem loading missile looping
 		log.Fatal(err)
 	}
+
+	d = mustLoadSoundAsStream(soundBox, "missile.wav", audioContext)
+	sound = audio.NewInfiniteLoopWithIntro(d, 2*4*int64(sampleRate), 4*4*int64(sampleRate))
+	missile, err = audio.NewPlayer(audioContext, sound)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	d = mustLoadSoundAsStream(soundBox, "rcsoff.wav", audioContext)
+	rcsOff, err = audio.NewPlayer(audioContext, d)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	d = mustLoadSoundAsStream(soundBox, "missileoff.wav", audioContext)
+	missileOff, err = audio.NewPlayer(audioContext, d)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	d = mustLoadSoundAsStream(soundBox, "release.wav", audioContext)
+	release, err = audio.NewPlayer(audioContext, d)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	d = mustLoadSoundAsStream(soundBox, "warning.wav", audioContext)
+	warning, err = audio.NewPlayer(audioContext, d)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func mustLoadSoundAsStream(soundBox *rice.Box, soundFileName string, audioContext *audio.Context) *wav.Stream {
+	soundFile := bytes.NewReader(soundBox.MustBytes(soundFileName))
+	d, err := wav.Decode(audioContext, soundFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return d
 }
 
 // Queue audio player

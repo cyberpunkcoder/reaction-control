@@ -4,6 +4,7 @@ import (
 	"math"
 	"os"
 
+	rice "github.com/GeertJohan/go.rice"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
@@ -58,18 +59,16 @@ type Game struct {
 	elements [][]Element
 }
 
-func init() {
-	InitImages()
-	InitSounds()
-}
-
-func newGame() *Game {
+func newGame(assetBox *rice.Box) *Game {
 	g := &Game{}
-	g.init()
+	g.init(assetBox)
 	return g
 }
 
-func (g *Game) init() {
+func (g *Game) init(assetBox *rice.Box) {
+	// Load resource files
+	initImages(assetBox)
+	initSounds(assetBox)
 	// Create 3 layers of objects
 	// Lowest layer is for projectiles
 	// Middle layer is for player and enemies
@@ -187,11 +186,11 @@ func (g *Game) Draw(screen *ebiten.Image) {
 }
 
 // Start the game
-func (g *Game) Start() {
+func (g *Game) Start(assetBox *rice.Box) {
 	ebiten.SetFullscreen(true)
 	ebiten.SetCursorMode(ebiten.CursorModeHidden)
 
-	if err := ebiten.RunGame(newGame()); err != nil {
+	if err := ebiten.RunGame(newGame(assetBox)); err != nil {
 		panic(err)
 	}
 }

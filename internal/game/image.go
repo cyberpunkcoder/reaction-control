@@ -29,7 +29,7 @@ func initImages(imgBox *rice.Box) {
 	shipImage = mustLoadImage(imgBox, "ship.png")
 	alienImage = mustLoadImage(imgBox, "alien.png")
 	missileImage = mustLoadImage(imgBox, "missile.png")
-	fusionImage = mustLoadImage(imgBox, "alien.png")
+	fusionImage = mustLoadImage(imgBox, "fusion.png")
 	rcsl = mustLoadImage(imgBox, "rcsl.png")
 	rcsfr = mustLoadImage(imgBox, "rcsfr.png")
 	rcsfl = mustLoadImage(imgBox, "rcsfl.png")

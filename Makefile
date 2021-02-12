@@ -3,8 +3,12 @@
 .PHONY: default
 default: build
 
+.PHONY: install-rice
+install-rice:
+	go get github.com/GeertJohan/go.rice/rice
+
 .PHONY: cook-rice
-cook-rice:
+cook-rice: install-rice
 	cd ./cmd/reaction-control && rice embed-go
 
 .PHONY: build

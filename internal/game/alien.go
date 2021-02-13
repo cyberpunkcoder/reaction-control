@@ -24,6 +24,9 @@ func CreateAlien(p Position, s Speed) *Alien {
 // Update the alien state
 func (a *Alien) Update(g *Game) {
 	a.NewtonsFirstLaw()
+	slope := (a.yPos - g.player.yPos) / (a.xPos - g.player.xPos)
+	angle := math.Tan(slope)
+	a.rPos = angle
 }
 
 // Draw the alien

@@ -1,10 +1,12 @@
 package game
 
 import (
+	"fmt"
 	"math"
 	"os"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
@@ -184,6 +186,8 @@ func (g *Game) Draw(screen *ebiten.Image) {
 			o.Draw(screen, op, g)
 		}
 	}
+
+	ebitenutil.DebugPrint(screen, fmt.Sprintf("%f", g.player.rPos))
 }
 
 // Start the game
@@ -200,5 +204,7 @@ func (g *Game) Start() {
 func (o *Object) NewtonsFirstLaw() {
 	o.xPos += o.xSpd
 	o.yPos += o.ySpd
-	o.rPos += o.rSpd
+
+	// Ensure object rotation degrees is in range 0 to 359
+	o.rPos = math.Mod(math.Abs(o.rPos+o.rSpd+360), 360)
 }

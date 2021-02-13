@@ -38,7 +38,7 @@ func CreateShip(p Position, s Speed) *Ship {
 }
 
 // Update the ship state
-func (s *Ship) Update() {
+func (s *Ship) Update(g *Game) {
 	s.NewtonsFirstLaw()
 
 	if s.lThrusters {

@@ -22,7 +22,7 @@ func CreateAlien(p Position, s Speed) *Alien {
 }
 
 // Update the alien state
-func (a *Alien) Update() {
+func (a *Alien) Update(g *Game) {
 	a.NewtonsFirstLaw()
 }
 

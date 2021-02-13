@@ -36,7 +36,7 @@ func CreateMissile(p Position, s Speed) *Missile {
 }
 
 // Update the missile state
-func (m *Missile) Update() {
+func (m *Missile) Update(g *Game) {
 	m.NewtonsFirstLaw()
 
 	// Check if missile is active

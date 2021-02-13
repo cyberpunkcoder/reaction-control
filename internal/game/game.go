@@ -24,7 +24,7 @@ type Speed struct {
 
 // Element within the game
 type Element interface {
-	Update()
+	Update(g *Game)
 	Draw(screen *ebiten.Image, op *ebiten.DrawImageOptions, g *Game)
 }
 
@@ -145,7 +145,7 @@ func (g *Game) Update() error {
 
 	for layer := 0; layer < len(g.elements); layer++ {
 		for _, e := range g.elements[layer] {
-			e.Update()
+			e.Update(g)
 		}
 	}
 

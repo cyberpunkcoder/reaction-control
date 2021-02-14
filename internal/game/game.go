@@ -1,12 +1,10 @@
 package game
 
 import (
-	"fmt"
 	"math"
 	"os"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
@@ -187,7 +185,8 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		}
 	}
 
-	ebitenutil.DebugPrint(screen, fmt.Sprintf("%f", g.player.rPos))
+	// Uncomment to live debug a value
+	// ebitenutil.DebugPrint(screen, fmt.Sprintf("%f", g.player.rPos))
 }
 
 // Start the game

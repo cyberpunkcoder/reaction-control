@@ -10,22 +10,40 @@ import (
 type Alien struct {
 	Object
 	Character
+	rMax   float64
+	sMax   float64
+	thrust float64
 }
 
 // CreateAlien at a location
 func CreateAlien(p Position, s Speed) *Alien {
-	return &Alien{Object: Object{
-		Position: p,
-		Speed:    s,
-		Image:    alienImage,
-	}}
+	return &Alien{
+		Object: Object{
+			Position: p,
+			Speed:    s,
+			Image:    alienImage,
+		},
+		rMax:   10,
+		sMax:   5,
+		thrust: 0.05,
+	}
 }
 
 // Update the alien state
 func (a *Alien) Update(g *Game) {
 	a.NewtonsFirstLaw()
-	slope := (a.yPos - g.player.yPos) / (a.xPos - g.player.xPos)
-	angle := math.Tan(slope)
+
+	angle := math.Atan2(g.player.yPos-a.yPos, g.player.xPos-a.xPos)*(180/math.Pi) + 90
+
+	radAng := (angle + 90) * (math.Pi / 180)
+	xSpd := a.xSpd - a.thrust*math.Cos(radAng)
+	ySpd := a.ySpd - a.thrust*math.Sin(radAng)
+
+	if math.Abs(xSpd)+math.Abs(ySpd) <= a.sMax {
+		a.xSpd = xSpd
+		a.ySpd = ySpd
+	}
+
 	a.rPos = angle
 }
 

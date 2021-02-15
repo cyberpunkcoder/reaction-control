@@ -82,8 +82,17 @@ func (g *Game) init() {
 	// Put ship on 2nd layer
 	g.elements[1] = append(g.elements[1], g.player)
 
-	// Create an alien for testing
+	// Create an aliens for testing
 	alien := CreateAlien(Position{0, -128, -180}, Speed{})
+	alien.target = &g.player.Object
+	g.elements[1] = append(g.elements[1], alien)
+
+	alien = CreateAlien(Position{64, -128, -180}, Speed{})
+	alien.target = &g.player.Object
+	g.elements[1] = append(g.elements[1], alien)
+
+	alien = CreateAlien(Position{-64, -128, -180}, Speed{})
+	alien.target = &g.player.Object
 	g.elements[1] = append(g.elements[1], alien)
 }
 

@@ -1,6 +1,7 @@
 package game
 
 import (
+	"image"
 	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -10,10 +11,11 @@ import (
 type Alien struct {
 	Object
 	Character
-	target *Object
-	rMax   float64
-	sMax   float64
-	thrust float64
+	target    *Object
+	rMax      float64
+	sMax      float64
+	thrust    float64
+	thrusting bool
 }
 
 // CreateAlien at a location
@@ -25,8 +27,8 @@ func CreateAlien(p Position, s Speed) *Alien {
 			Image:    alienImage,
 		},
 		rMax:   5,
-		sMax:   5.5,
-		thrust: 0.02,
+		sMax:   6,
+		thrust: 0.03,
 	}
 }
 
@@ -35,6 +37,8 @@ func (a *Alien) Update(g *Game) {
 	a.NewtonsFirstLaw()
 
 	if a.target != nil {
+		a.thrusting = false
+
 		// Direction to player
 		dir := math.Atan2(a.target.yPos-a.yPos, a.target.xPos-a.xPos)
 
@@ -51,6 +55,8 @@ func (a *Alien) Update(g *Game) {
 
 		if math.Abs(rDiff) < 45 {
 			// Start thrusting
+			a.thrusting = true
+
 			xSpd := a.xSpd + a.thrust*math.Cos(dir)
 			ySpd := a.ySpd + a.thrust*math.Sin(dir)
 
@@ -65,28 +71,50 @@ func (a *Alien) Update(g *Game) {
 
 // Draw the alien
 func (a *Alien) Draw(screen *ebiten.Image, op *ebiten.DrawImageOptions, g *Game) {
-	var frame float64 = math.Mod(float64(g.count)*0.2, 360)
 
-	// Orient the rotation of the fusion reaction inside the alien
-	op.GeoM.Reset()
-	op.GeoM.Translate(-16, -16)
-	op.GeoM.Rotate(frame - (a.rPos / 4))
-	op.GeoM.Translate(a.xPos, a.yPos)
-	g.viewPort.Orient(op)
-
-	screen.DrawImage(fusionImage, op)
-
-	// Orient the actual alien
+	// Orient the alien's body
 	op.GeoM.Reset()
 	op.GeoM.Translate(-16, -16)
 	op.GeoM.Rotate(a.rPos * 2 * math.Pi / 360)
 	op.GeoM.Translate(a.xPos, a.yPos)
 	g.viewPort.Orient(op)
 
-	screen.DrawImage(a.Image, op)
+	if a.thrusting {
+		// Draw alien thrusting
+		screen.DrawImage(a.Image.SubImage(image.Rect(32, 0, 64, 32)).(*ebiten.Image), op)
+	} else {
+		// Draw alien not thrusting
+		screen.DrawImage(a.Image.SubImage(image.Rect(0, 0, 32, 32)).(*ebiten.Image), op)
+	}
+
+	// Orient the rotation of the fusion reaction inside the alien
+	op.GeoM.Reset()
+	op.GeoM.Translate(-16, -16)
+	op.GeoM.Rotate(math.Mod(float64(g.count)*0.2, 360) - (a.rPos / 8))
+	op.GeoM.Translate(a.xPos, a.yPos)
+	g.viewPort.Orient(op)
+	screen.DrawImage(fusionImage, op)
 }
 
 func (a *Alien) isGoingAwayFrom(o *Object) bool {
+	if a.xPos > a.target.xPos {
+		if a.xSpd > a.target.xSpd+a.thrust {
+			return true
+		}
+	} else if a.xSpd < a.target.xSpd-a.thrust {
+		return true
+	}
+	if a.yPos > a.target.yPos {
+		if a.ySpd > a.target.ySpd+a.thrust {
+			return true
+		}
+	} else if a.ySpd < a.target.ySpd-a.thrust {
+		return true
+	}
+	return false
+}
+
+func (a Alien) isApproachingTooFast() bool {
 	if a.xPos > a.target.xPos {
 		if a.xSpd > a.target.xSpd+a.thrust {
 			return true

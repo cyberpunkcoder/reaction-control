@@ -22,7 +22,7 @@ var (
 	space        *ebiten.Image
 )
 
-// InitImages initialize game images
+// InitImages initializes the game images.
 func InitImages() {
 
 	shipImage = mustLoadImageFromFile("../../assets/ship.png")
@@ -38,6 +38,7 @@ func InitImages() {
 	space = mustLoadImageFromFile("../../assets/space.png")
 }
 
+// mustLoadImageFromFile loads an image from a file and panics if it fails.
 func mustLoadImageFromFile(imgPath string) *ebiten.Image {
 	img, _, err := ebitenutil.NewImageFromFile(imgPath)
 	if err != nil {

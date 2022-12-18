@@ -7,7 +7,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
-// Missile that the player shoots
+// Missile is a missile object.
 type Missile struct {
 	Object
 	time   int
@@ -16,7 +16,7 @@ type Missile struct {
 	thrust float64
 }
 
-// CreateMissile created at position with speed
+// CreateMissile created at a position with a speed.
 func CreateMissile(p Position, s Speed) *Missile {
 	// Initial missile ejection speed
 	radAng := (p.rPos + 90) * (math.Pi / 180)
@@ -35,25 +35,24 @@ func CreateMissile(p Position, s Speed) *Missile {
 	}
 }
 
-// Update the missile state
+// Update updates the missile's state.
 func (m *Missile) Update(g *Game) {
 	m.NewtonsFirstLaw()
 
-	// Check if missile is active
+	// Check if missile is active by checking if it is within it's burn time.
 	if m.time < m.delay+m.burn {
 		if m.time >= m.delay {
-			// Start thrusting
 			radAng := (m.rPos + 90) * (math.Pi / 180)
 			m.xSpd = m.xSpd - m.thrust*math.Cos(radAng)
 			m.ySpd = m.ySpd - m.thrust*math.Sin(radAng)
 
+			// Check if the missile is thrusting.
 			if m.time == m.delay {
-				// Start thrusting sound
 				queuePlayer(missile)
 			}
 		}
+		// Check if the missile has burned out.
 	} else if m.time == m.delay+m.burn {
-		// Stop thrusting sound
 		missileOff.Rewind()
 		missileOff.Play()
 		unQueuePlayer(missile)
@@ -61,7 +60,7 @@ func (m *Missile) Update(g *Game) {
 	m.time++
 }
 
-// Draw the missile
+// Draw draws the missile on the screen.
 func (m *Missile) Draw(screen *ebiten.Image, op *ebiten.DrawImageOptions, g *Game) {
 	op.GeoM.Reset()
 	op.GeoM.Translate(-4, -3)
@@ -72,11 +71,11 @@ func (m *Missile) Draw(screen *ebiten.Image, op *ebiten.DrawImageOptions, g *Gam
 	frame := ((g.count / 2) % 2) + 1
 	_, s := m.Image.Size()
 
+	// Check if missile is thrusting by checking if it is within it's burn time.
 	if m.time > m.delay && m.time < m.delay+m.burn {
-		// Draw missile thrusting
 		screen.DrawImage(m.Image.SubImage(image.Rect(frame*s, 0, s+(frame*s), s)).(*ebiten.Image), op)
 		return
 	}
-	// Draw missile not thrusting
+	// Draw missile but not thrusting.
 	screen.DrawImage(m.Image.SubImage(image.Rect(0, 0, s, s)).(*ebiten.Image), op)
 }

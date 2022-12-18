@@ -12,23 +12,23 @@ var (
 	err error
 )
 
-// Position in the game
+// Position is a positon in the game.
 type Position struct {
 	xPos, yPos, rPos float64
 }
 
-// Speed in the game
+// Speed is an x, y and rotational speed in the game.
 type Speed struct {
 	xSpd, ySpd, rSpd float64
 }
 
-// Element within the game
+// Element is a visual element within the game.
 type Element interface {
 	Update(g *Game)
 	Draw(screen *ebiten.Image, op *ebiten.DrawImageOptions, g *Game)
 }
 
-// Character in the game
+// Character is a controllable character in the game.
 type Character interface {
 	Up()
 	Down()
@@ -41,7 +41,7 @@ type Character interface {
 	Die()
 }
 
-// Object in the game
+// Object is a physical object in the game.
 type Object struct {
 	Element
 	Speed
@@ -50,7 +50,7 @@ type Object struct {
 	Image *ebiten.Image
 }
 
-// Game struct for ebiten
+// Game is a game struct for the ebiten game engine.
 type Game struct {
 	count    int
 	player   *Ship
@@ -69,20 +69,21 @@ func newGame() *Game {
 	return g
 }
 
+// init creates three layers of objects in the game.
+// The lowest or 0th layer is for projectiles.
+// The middle or 1st layer is for player and enemies.
+// The highest or 2nd layer is for UI.
 func (g *Game) init() {
-	// Create 3 layers of objects
-	// Lowest layer is for projectiles
-	// Middle layer is for player and enemies
-	// Highest layer is for UI
 	g.elements = make([][]Element, 3)
 
-	// Create player ship
+	// Create the player's ship.
 	g.player = CreateShip(Position{}, Speed{})
 	g.viewPort = NewViewPort(g.player.Position)
-	// Put ship on 2nd layer
+	// Put the player in the middle layer.
 	g.elements[1] = append(g.elements[1], g.player)
 
-	// Create an aliens for testing
+	// TODO: remove this test code.
+	// Create three aliens for testing behavior.
 	alien := CreateAlien(Position{0, -128, -180}, Speed{})
 	alien.target = &g.player.Object
 	g.elements[1] = append(g.elements[1], alien)
@@ -142,12 +143,12 @@ func (g *Game) control() {
 	}
 }
 
-// Layout the game screen
+// Layout is the visual layout of the game screen.
 func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 	return int(g.viewPort.width), int(g.viewPort.height)
 }
 
-// Update logical state of the game
+// Update updates the logical state of the game.indo
 func (g *Game) Update() error {
 	g.count++
 	g.control()
@@ -162,10 +163,10 @@ func (g *Game) Update() error {
 	return nil
 }
 
-// Draw the screen
+// Draw draws the game on the screen.
 func (g *Game) Draw(screen *ebiten.Image) {
 	bgW, bgH := space.Size()
-	// Offset each background tile one pixel to stop alias gap
+	// Offset each background tile one pixel to stop alias gap.
 	w, h := float64(bgW-1), float64(bgH-1)
 
 	vpMaxX, vpMaxY := g.viewPort.Max()
@@ -177,7 +178,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 	op := &ebiten.DrawImageOptions{}
 
-	// Draw background only where needed
+	// Draw the background only where visible by the screen.
 	for x := xMin; x < xMax; x += w {
 		for y := yMin; y < yMax; y += h {
 			op.GeoM.Reset()
@@ -187,18 +188,18 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		}
 	}
 
-	// Draw objects according to their layer
+	// Draw the objects according to their layer.
 	for layer := 0; layer < len(g.elements); layer++ {
 		for _, o := range g.elements[layer] {
 			o.Draw(screen, op, g)
 		}
 	}
 
-	// Uncomment to live debug a value
+	// Uncomment for live debugging a value.
 	// ebitenutil.DebugPrint(screen, fmt.Sprintf("%f", g.player.rPos))
 }
 
-// Start the game
+// Start begins the game.
 func (g *Game) Start() {
 	ebiten.SetFullscreen(true)
 	ebiten.SetCursorMode(ebiten.CursorModeHidden)
@@ -208,11 +209,12 @@ func (g *Game) Start() {
 	}
 }
 
-// NewtonsFirstLaw states that an object will stay in motion
+// NewtonsFirstLaw applies newton's first law to an object.
+// Objects in motion will stay in motion.
 func (o *Object) NewtonsFirstLaw() {
 	o.xPos += o.xSpd
 	o.yPos += o.ySpd
 
-	// Ensure object rotation degrees is in range 0 to 359
+	// Ensure object rotation degrees is in range 0 to 359.
 	o.rPos = math.Mod(math.Abs(o.rPos+o.rSpd+360), 360)
 }

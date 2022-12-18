@@ -7,7 +7,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
-// Alien squishy fusion reactor boi
+// Alien is a squishy fusion reactor boi.
 type Alien struct {
 	Object
 	Character
@@ -18,7 +18,7 @@ type Alien struct {
 	thrusting bool
 }
 
-// CreateAlien at a location
+// CreateAlien creates an alien at a position.
 func CreateAlien(p Position, s Speed) *Alien {
 	return &Alien{
 		Object: Object{
@@ -32,29 +32,29 @@ func CreateAlien(p Position, s Speed) *Alien {
 	}
 }
 
-// Update the alien state
+// Update updates the the alien's state.
 func (a *Alien) Update(g *Game) {
 	a.NewtonsFirstLaw()
 
 	if a.target != nil {
 		a.thrusting = false
 
-		// Direction to player
+		// Direction to the target.
 		dir := math.Atan2(a.target.yPos-a.yPos, a.target.xPos-a.xPos)
 
 		if a.isGoingAwayFrom(a.target) {
-			// Direction player is moving
+			// Direction the target is moving.
 			dir = math.Atan2(a.target.ySpd-a.ySpd, a.target.xSpd-a.xSpd)
 		}
 
-		// Target rotation degrees
+		// The target's rotation in degrees.
 		rTarget := math.Mod(dir*(180/math.Pi)+450, 360)
 
-		// Difference in rotation target and rotation position
+		// Difference in rotation target and rotation position.
 		rDiff := math.Mod((rTarget+360)-(a.rPos+360), 360)
 
+		// If the difference in rotation is less than 45 degrees, thrust.
 		if math.Abs(rDiff) < 45 {
-			// Start thrusting
 			a.thrusting = true
 
 			xSpd := a.xSpd + a.thrust*math.Cos(dir)
@@ -69,10 +69,10 @@ func (a *Alien) Update(g *Game) {
 	}
 }
 
-// Draw the alien
+// Draw draws the alien.
 func (a *Alien) Draw(screen *ebiten.Image, op *ebiten.DrawImageOptions, g *Game) {
 
-	// Orient the alien's body
+	// Orient the alien's body.
 	op.GeoM.Reset()
 	op.GeoM.Translate(-16, -16)
 	op.GeoM.Rotate(a.rPos * 2 * math.Pi / 360)
@@ -80,14 +80,14 @@ func (a *Alien) Draw(screen *ebiten.Image, op *ebiten.DrawImageOptions, g *Game)
 	g.viewPort.Orient(op)
 
 	if a.thrusting {
-		// Draw alien thrusting
+		// Draw the alien thrusting.
 		screen.DrawImage(a.Image.SubImage(image.Rect(32, 0, 64, 32)).(*ebiten.Image), op)
 	} else {
-		// Draw alien not thrusting
+		// Draw the alien not thrusting.
 		screen.DrawImage(a.Image.SubImage(image.Rect(0, 0, 32, 32)).(*ebiten.Image), op)
 	}
 
-	// Orient the rotation of the fusion reaction inside the alien
+	// Orient the rotation of the fusion reaction inside the alien.
 	op.GeoM.Reset()
 	op.GeoM.Translate(-16, -16)
 	op.GeoM.Rotate(math.Mod(float64(g.count)*0.2, 360) - (a.rPos / 8))
@@ -96,6 +96,7 @@ func (a *Alien) Draw(screen *ebiten.Image, op *ebiten.DrawImageOptions, g *Game)
 	screen.DrawImage(fusionImage, op)
 }
 
+// isGoingAwayFrom returns true if the alien is going away from the object.
 func (a *Alien) isGoingAwayFrom(o *Object) bool {
 	if a.xPos > a.target.xPos {
 		if a.xSpd > a.target.xSpd+a.thrust {
@@ -114,6 +115,7 @@ func (a *Alien) isGoingAwayFrom(o *Object) bool {
 	return false
 }
 
+// isApproachingTooFast returns true if the alien is approaching the object too fast.
 func (a Alien) isApproachingTooFast() bool {
 	if a.xPos > a.target.xPos {
 		if a.xSpd > a.target.xSpd+a.thrust {

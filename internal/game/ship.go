@@ -7,7 +7,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
-// Ship space ship
+// Ship is a space ship.
 type Ship struct {
 	Object
 	rMax         float64
@@ -22,7 +22,7 @@ type Ship struct {
 	revThrusters bool
 }
 
-// CreateShip is initialized and returned
+// CreateShip creates an initialized ship.
 func CreateShip(p Position, s Speed) *Ship {
 	return &Ship{
 		Object: Object{
@@ -37,7 +37,7 @@ func CreateShip(p Position, s Speed) *Ship {
 	}
 }
 
-// Update the ship state
+// Update updates the ship's state.
 func (s *Ship) Update(g *Game) {
 	s.NewtonsFirstLaw()
 
@@ -98,7 +98,7 @@ func (s *Ship) Update(g *Game) {
 	}
 }
 
-// Draw the ship on screen in game
+// Draw draws the ship in the screen.
 func (s *Ship) Draw(screen *ebiten.Image, op *ebiten.DrawImageOptions, g *Game) {
 	w, h := s.Image.Size()
 	frame := (g.count / 2) % 2
@@ -150,7 +150,8 @@ func (s *Ship) Draw(screen *ebiten.Image, op *ebiten.DrawImageOptions, g *Game) 
 	}
 }
 
-// FireMissile from ship
+// FireMissile fires a missile from ship.
+// If ship is out of missiles, a warning sound is played.
 func (s *Ship) FireMissile(g *Game) {
 	// Return if ship is out of missiles
 	if s.missiles == 0 {
@@ -160,7 +161,7 @@ func (s *Ship) FireMissile(g *Game) {
 		}
 		return
 	}
-	// Alternate missiles appearing from the left and right
+	// Missiles appear alternating from the left and right.
 	offset := math.Pow(-1, float64(s.missiles)) * 6
 
 	pos := s.Position
@@ -175,7 +176,7 @@ func (s *Ship) FireMissile(g *Game) {
 	release.Play()
 }
 
-// LThrustersOn left thrusters on
+// LThrustersOn turns the left thrusters on.
 func (s *Ship) LThrustersOn() {
 	if !s.rThrusters {
 		s.lThrusters = true
@@ -183,7 +184,7 @@ func (s *Ship) LThrustersOn() {
 	}
 }
 
-// LThrustersOff left thrusters off
+// LThrustersOff turns the left thrusters off.
 func (s *Ship) LThrustersOff() {
 	if s.lThrusters {
 		s.lThrusters = false
@@ -193,7 +194,7 @@ func (s *Ship) LThrustersOff() {
 	}
 }
 
-// RThrustersOn right thrusters on
+// RThrustersOn turns the right thrusters on.
 func (s *Ship) RThrustersOn() {
 	if !s.rThrusters {
 		s.rThrusters = true
@@ -201,7 +202,7 @@ func (s *Ship) RThrustersOn() {
 	}
 }
 
-// RThrustersOff right thrusters off
+// RThrustersOff turns the right thrusters off.
 func (s *Ship) RThrustersOff() {
 	if s.rThrusters {
 		s.rThrusters = false
@@ -211,7 +212,7 @@ func (s *Ship) RThrustersOff() {
 	}
 }
 
-// CwThrustersOn clockwise thrusters on
+// CwThrustersOn turns the clockwise thrusters on.
 func (s *Ship) CwThrustersOn() {
 	if !s.cwThrusters {
 		s.cwThrusters = true
@@ -219,7 +220,7 @@ func (s *Ship) CwThrustersOn() {
 	}
 }
 
-// CwThrustersOff clockwise thruters off
+// CwThrustersOff turns the clockwise thruters off.
 func (s *Ship) CwThrustersOff() {
 	if s.cwThrusters {
 		s.cwThrusters = false
@@ -229,7 +230,7 @@ func (s *Ship) CwThrustersOff() {
 	}
 }
 
-// CcwThrustersOn counter clockwise thrusters on
+// CcwThrustersOn turns the counter clockwise thrusters on.
 func (s *Ship) CcwThrustersOn() {
 	if !s.ccwThrusters {
 		s.ccwThrusters = true
@@ -237,7 +238,7 @@ func (s *Ship) CcwThrustersOn() {
 	}
 }
 
-// CcwThrustersOff counter clockwise thrusters off
+// CcwThrustersOff turns the counter clockwise thrusters off.
 func (s *Ship) CcwThrustersOff() {
 	if s.ccwThrusters {
 		s.ccwThrusters = false
@@ -247,7 +248,7 @@ func (s *Ship) CcwThrustersOff() {
 	}
 }
 
-// FwdThrustersOn forward thrusters on
+// FwdThrustersOn turns the forward thrusters on.
 func (s *Ship) FwdThrustersOn() {
 	if !s.fwdThrusters {
 		s.fwdThrusters = true
@@ -255,7 +256,7 @@ func (s *Ship) FwdThrustersOn() {
 	}
 }
 
-// FwdThrustersOff forward thrusters off
+// FwdThrustersOff turns the forward thrusters off.
 func (s *Ship) FwdThrustersOff() {
 	if s.fwdThrusters {
 		s.fwdThrusters = false
@@ -265,7 +266,7 @@ func (s *Ship) FwdThrustersOff() {
 	}
 }
 
-// RevThrustersOn reverse thrusters on
+// RevThrustersOn turns the reverse thrusters on.
 func (s *Ship) RevThrustersOn() {
 	if !s.revThrusters {
 		s.revThrusters = true
@@ -273,7 +274,7 @@ func (s *Ship) RevThrustersOn() {
 	}
 }
 
-// RevThrustersOff reverse thrusters off
+// RevThrustersOff turns the reverse thrusters off.
 func (s *Ship) RevThrustersOff() {
 	if s.revThrusters {
 		s.revThrusters = false
@@ -283,10 +284,12 @@ func (s *Ship) RevThrustersOff() {
 	}
 }
 
+// isMaxSpd returns true if the ship is at max speed.
 func (s *Ship) isMaxSpd() bool {
 	return math.Abs(s.xSpd)+math.Abs(s.ySpd) == s.sMax
 }
 
+// ISMaxRSpd returns true if the ship is at max rotational speed.
 func (s *Ship) isMaxRSpd() bool {
 	return math.Abs(s.rSpd) == s.rMax
 }

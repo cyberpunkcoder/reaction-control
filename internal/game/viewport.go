@@ -6,19 +6,19 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
-// ViewPort a player sees through
+// ViewPort is a window a player sees through.
 type ViewPort struct {
 	Position
 	Speed
-	zoom          float64
+	zoom int
 	width, height float64
 }
 
-// NewViewPort is initialized and returned
+// NewViewPort initializes a new view port.
 func NewViewPort(p Position) *ViewPort {
 	w, h := ebiten.ScreenSizeInFullscreen()
 
-	// Scale up game for monitor size
+	// Scale up the game for monitor size.
 	zoom := 2
 
 	if w > 1920 {
@@ -30,6 +30,7 @@ func NewViewPort(p Position) *ViewPort {
 	vp := ViewPort{
 		width:  float64(w / zoom),
 		height: float64(h / zoom),
+		zoom:   zoom,
 		Position: Position{
 			xPos: p.xPos,
 			yPos: p.yPos,

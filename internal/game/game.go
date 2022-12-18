@@ -8,10 +8,6 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
-var (
-	err error
-)
-
 // Position is a positon in the game.
 type Position struct {
 	xPos, yPos, rPos float64

@@ -20,8 +20,8 @@ type Missile struct {
 func CreateMissile(p Position, s Speed) *Missile {
 	// Initial missile ejection speed
 	radAng := (p.rPos + 90) * (math.Pi / 180)
-	s.xSpd = s.xSpd - 1*math.Cos(radAng)
-	s.ySpd = s.ySpd - 1*math.Sin(radAng)
+	s.xSpd = s.xSpd - math.Cos(radAng)
+	s.ySpd = s.ySpd - math.Sin(radAng)
 
 	return &Missile{
 		Object: Object{

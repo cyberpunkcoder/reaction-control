@@ -103,39 +103,39 @@ func (g *Game) control() {
 	}
 
 	if inpututil.IsKeyJustPressed(ebiten.KeyQ) {
-		g.player.RThrustersOn()
+		g.player.RightThrustersOn()
 	} else if inpututil.IsKeyJustReleased(ebiten.KeyQ) {
-		g.player.RThrustersOff()
+		g.player.RightThrustersOff()
 	}
 
 	if inpututil.IsKeyJustPressed(ebiten.KeyE) {
-		g.player.LThrustersOn()
+		g.player.LeftThrustersOn()
 	} else if inpututil.IsKeyJustReleased(ebiten.KeyE) {
-		g.player.LThrustersOff()
+		g.player.LeftThrustersOff()
 	}
 
 	if inpututil.IsKeyJustPressed(ebiten.KeyW) {
-		g.player.FwdThrustersOn()
+		g.player.ForwardThrustersOn()
 	} else if inpututil.IsKeyJustReleased(ebiten.KeyW) {
-		g.player.FwdThrustersOff()
+		g.player.ForwardThrustersOff()
 	}
 
 	if inpututil.IsKeyJustPressed(ebiten.KeyS) {
-		g.player.RevThrustersOn()
+		g.player.ReverseThrustersOn()
 	} else if inpututil.IsKeyJustReleased(ebiten.KeyS) {
-		g.player.RevThrustersOff()
+		g.player.ReverseThrustersOff()
 	}
 
 	if inpututil.IsKeyJustPressed(ebiten.KeyA) {
-		g.player.CcwThrustersOn()
+		g.player.CounterClockwiseThrustersOn()
 	} else if inpututil.IsKeyJustReleased(ebiten.KeyA) {
-		g.player.CcwThrustersOff()
+		g.player.CounterClockwiseThrustersOff()
 	}
 
 	if inpututil.IsKeyJustPressed(ebiten.KeyD) {
-		g.player.CwThrustersOn()
+		g.player.ClockwiseThrustersOn()
 	} else if inpututil.IsKeyJustReleased(ebiten.KeyD) {
-		g.player.CwThrustersOff()
+		g.player.ClockwiseThrustersOff()
 	}
 }
 

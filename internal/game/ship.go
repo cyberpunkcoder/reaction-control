@@ -7,22 +7,27 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
+const defaultMissilesCount = 50
+const defaultMaxRotationSpeed = 10
+const defaultMaxSpeed = 5
+const defaultDeltaV = 0.02
+
 // Ship is a space ship.
 type Ship struct {
 	Object
-	rMax         float64
-	sMax         float64
-	thrust       float64
-	missiles     int
-	lThrusters   bool
-	rThrusters   bool
-	cwThrusters  bool
-	ccwThrusters bool
-	fwdThrusters bool
-	revThrusters bool
+	maxRotationSpeed          float64
+	maxSpeed                  float64
+	deltaV                    float64
+	missileCount             int
+	leftThrusters             bool
+	rightThrusters            bool
+	clockwiseThrusters        bool
+	counterClockwiseThrusters bool
+	forwardThrusters          bool
+	reverseThrusters          bool
 }
 
-// CreateShip creates an initialized ship.
+// CreateShip creates an initialized ship at a position with speed.
 func CreateShip(p Position, s Speed) *Ship {
 	return &Ship{
 		Object: Object{
@@ -30,10 +35,10 @@ func CreateShip(p Position, s Speed) *Ship {
 			Position: p,
 			Speed:    s,
 		},
-		missiles: 50,
-		rMax:     10,
-		sMax:     5,
-		thrust:   0.02,
+		missileCount:    defaultMissilesCount,
+		maxRotationSpeed: defaultMaxRotationSpeed,
+		maxSpeed:         defaultMaxSpeed,
+		deltaV:           defaultDeltaV,
 	}
 }
 
@@ -41,59 +46,59 @@ func CreateShip(p Position, s Speed) *Ship {
 func (s *Ship) Update(g *Game) {
 	s.NewtonsFirstLaw()
 
-	if s.lThrusters {
+	if s.leftThrusters {
 		radAng := (s.rPos + 180) * (math.Pi / 180)
-		xSpd := s.xSpd - s.thrust*math.Cos(radAng)
-		ySpd := s.ySpd - s.thrust*math.Sin(radAng)
+		xSpd := s.xSpd - s.deltaV*math.Cos(radAng)
+		ySpd := s.ySpd - s.deltaV*math.Sin(radAng)
 
-		if math.Abs(xSpd)+math.Abs(ySpd) <= s.sMax {
+		if math.Abs(xSpd)+math.Abs(ySpd) <= s.maxSpeed {
 			s.xSpd = xSpd
 			s.ySpd = ySpd
 		}
 	}
 
-	if s.rThrusters {
+	if s.rightThrusters {
 		radAng := (s.rPos) * (math.Pi / 180)
-		xSpd := s.xSpd - s.thrust*math.Cos(radAng)
-		ySpd := s.ySpd - s.thrust*math.Sin(radAng)
+		xSpd := s.xSpd - s.deltaV*math.Cos(radAng)
+		ySpd := s.ySpd - s.deltaV*math.Sin(radAng)
 
-		if math.Abs(xSpd)+math.Abs(ySpd) <= s.sMax {
+		if math.Abs(xSpd)+math.Abs(ySpd) <= s.maxSpeed {
 			s.xSpd = xSpd
 			s.ySpd = ySpd
 		}
 	}
 
-	if s.fwdThrusters {
+	if s.forwardThrusters {
 		radAng := (s.rPos + 90) * (math.Pi / 180)
-		xSpd := s.xSpd - s.thrust*math.Cos(radAng)
-		ySpd := s.ySpd - s.thrust*math.Sin(radAng)
+		xSpd := s.xSpd - s.deltaV*math.Cos(radAng)
+		ySpd := s.ySpd - s.deltaV*math.Sin(radAng)
 
-		if math.Abs(xSpd)+math.Abs(ySpd) <= s.sMax {
+		if math.Abs(xSpd)+math.Abs(ySpd) <= s.maxSpeed {
 			s.xSpd = xSpd
 			s.ySpd = ySpd
 		}
 	}
 
-	if s.revThrusters {
+	if s.reverseThrusters {
 		radAng := (s.rPos + 90) * (math.Pi / 180)
-		xSpd := s.xSpd + s.thrust*math.Cos(radAng)
-		ySpd := s.ySpd + s.thrust*math.Sin(radAng)
+		xSpd := s.xSpd + s.deltaV*math.Cos(radAng)
+		ySpd := s.ySpd + s.deltaV*math.Sin(radAng)
 
-		if math.Abs(xSpd)+math.Abs(ySpd) <= s.sMax {
+		if math.Abs(xSpd)+math.Abs(ySpd) <= s.maxSpeed {
 			s.xSpd = xSpd
 			s.ySpd = ySpd
 		}
 	}
 
-	if s.cwThrusters {
-		if s.rSpd <= s.rMax {
-			s.rSpd += s.thrust * 2
+	if s.clockwiseThrusters {
+		if s.rSpd <= s.maxRotationSpeed {
+			s.rSpd += s.deltaV * 2
 		}
 	}
 
-	if s.ccwThrusters {
-		if s.rSpd >= -s.rMax {
-			s.rSpd -= s.thrust * 2
+	if s.counterClockwiseThrusters {
+		if s.rSpd >= -s.maxRotationSpeed {
+			s.rSpd -= s.deltaV * 2
 		}
 	}
 }
@@ -111,40 +116,40 @@ func (s *Ship) Draw(screen *ebiten.Image, op *ebiten.DrawImageOptions, g *Game) 
 
 	screen.DrawImage(s.Image, op)
 
-	if s.lThrusters {
+	if s.leftThrusters {
 		screen.DrawImage(rcsl.SubImage(image.Rect(frame*w, 0, w+(frame*w), h)).(*ebiten.Image), op)
 	}
 
-	if s.rThrusters {
+	if s.rightThrusters {
 		screen.DrawImage(rcsr.SubImage(image.Rect(frame*w, 0, w+(frame*w), h)).(*ebiten.Image), op)
 	}
 
-	if s.ccwThrusters {
+	if s.counterClockwiseThrusters {
 		screen.DrawImage(rcsfl.SubImage(image.Rect(frame*w, 0, w+(frame*w), h)).(*ebiten.Image), op)
 		screen.DrawImage(rcsbr.SubImage(image.Rect(frame*w, 0, w+(frame*w), h)).(*ebiten.Image), op)
 	}
 
-	if s.cwThrusters {
+	if s.clockwiseThrusters {
 		screen.DrawImage(rcsfr.SubImage(image.Rect(frame*w, 0, w+(frame*w), h)).(*ebiten.Image), op)
 		screen.DrawImage(rcsbl.SubImage(image.Rect(frame*w, 0, w+(frame*w), h)).(*ebiten.Image), op)
 	}
 
-	if s.fwdThrusters {
-		if !s.cwThrusters {
+	if s.forwardThrusters {
+		if !s.clockwiseThrusters {
 			screen.DrawImage(rcsbl.SubImage(image.Rect(frame*w, 0, w+(frame*w), h)).(*ebiten.Image), op)
 		}
 
-		if !s.ccwThrusters {
+		if !s.counterClockwiseThrusters {
 			screen.DrawImage(rcsbr.SubImage(image.Rect(frame*w, 0, w+(frame*w), h)).(*ebiten.Image), op)
 		}
 	}
 
-	if s.revThrusters {
-		if !s.ccwThrusters {
+	if s.reverseThrusters {
+		if !s.counterClockwiseThrusters {
 			screen.DrawImage(rcsfl.SubImage(image.Rect(frame*w, 0, w+(frame*w), h)).(*ebiten.Image), op)
 		}
 
-		if !s.cwThrusters {
+		if !s.clockwiseThrusters {
 			screen.DrawImage(rcsfr.SubImage(image.Rect(frame*w, 0, w+(frame*w), h)).(*ebiten.Image), op)
 		}
 	}
@@ -154,7 +159,7 @@ func (s *Ship) Draw(screen *ebiten.Image, op *ebiten.DrawImageOptions, g *Game) 
 // If ship is out of missiles, a warning sound is played.
 func (s *Ship) FireMissile(g *Game) {
 	// Return if ship is out of missiles
-	if s.missiles == 0 {
+	if s.missileCount == 0 {
 		if !warning.IsPlaying() {
 			warning.Rewind()
 			warning.Play()
@@ -162,13 +167,13 @@ func (s *Ship) FireMissile(g *Game) {
 		return
 	}
 	// Missiles appear alternating from the left and right.
-	offset := math.Pow(-1, float64(s.missiles)) * 6
+	offset := math.Pow(-1, float64(s.missileCount)) * 6
 
 	pos := s.Position
 	radAng := (s.rPos) * (math.Pi / 180)
 	pos.xPos += offset * math.Cos(radAng)
 	pos.yPos += offset * math.Sin(radAng)
-	s.missiles--
+	s.missileCount--
 
 	missile := CreateMissile(pos, g.player.Speed)
 	g.elements[0] = append(g.elements[0], missile)
@@ -176,108 +181,108 @@ func (s *Ship) FireMissile(g *Game) {
 	release.Play()
 }
 
-// LThrustersOn turns the left thrusters on.
-func (s *Ship) LThrustersOn() {
-	if !s.rThrusters {
-		s.lThrusters = true
+// LeftThrustersOn turns the left thrusters on.
+func (s *Ship) LeftThrustersOn() {
+	if !s.leftThrusters {
+		s.leftThrusters = true
 		queuePlayer(rcs)
 	}
 }
 
-// LThrustersOff turns the left thrusters off.
-func (s *Ship) LThrustersOff() {
-	if s.lThrusters {
-		s.lThrusters = false
+// LeftThrustersOff turns the left thrusters off.
+func (s *Ship) LeftThrustersOff() {
+	if s.leftThrusters {
+		s.leftThrusters = false
 		rcsOff.Rewind()
 		rcsOff.Play()
 		unQueuePlayer(rcs)
 	}
 }
 
-// RThrustersOn turns the right thrusters on.
-func (s *Ship) RThrustersOn() {
-	if !s.rThrusters {
-		s.rThrusters = true
+// RightThrustersOn turns the right thrusters on.
+func (s *Ship) RightThrustersOn() {
+	if !s.rightThrusters {
+		s.rightThrusters = true
 		queuePlayer(rcs)
 	}
 }
 
-// RThrustersOff turns the right thrusters off.
-func (s *Ship) RThrustersOff() {
-	if s.rThrusters {
-		s.rThrusters = false
+// RightThrustersOff turns the right thrusters off.
+func (s *Ship) RightThrustersOff() {
+	if s.rightThrusters {
+		s.rightThrusters = false
 		rcsOff.Rewind()
 		rcsOff.Play()
 		unQueuePlayer(rcs)
 	}
 }
 
-// CwThrustersOn turns the clockwise thrusters on.
-func (s *Ship) CwThrustersOn() {
-	if !s.cwThrusters {
-		s.cwThrusters = true
+// ClockwiseThrustersOn turns the clockwise thrusters on.
+func (s *Ship) ClockwiseThrustersOn() {
+	if !s.clockwiseThrusters {
+		s.clockwiseThrusters = true
 		queuePlayer(rcs)
 	}
 }
 
-// CwThrustersOff turns the clockwise thruters off.
-func (s *Ship) CwThrustersOff() {
-	if s.cwThrusters {
-		s.cwThrusters = false
+// ClockwiseThrustersOff turns the clockwise thrusters off.
+func (s *Ship) ClockwiseThrustersOff() {
+	if s.clockwiseThrusters {
+		s.clockwiseThrusters = false
 		rcsOff.Rewind()
 		rcsOff.Play()
 		unQueuePlayer(rcs)
 	}
 }
 
-// CcwThrustersOn turns the counter clockwise thrusters on.
-func (s *Ship) CcwThrustersOn() {
-	if !s.ccwThrusters {
-		s.ccwThrusters = true
+// CounterClockwiseThrustersOn turns the counter clockwise thrusters on.
+func (s *Ship) CounterClockwiseThrustersOn() {
+	if !s.counterClockwiseThrusters {
+		s.counterClockwiseThrusters = true
 		queuePlayer(rcs)
 	}
 }
 
-// CcwThrustersOff turns the counter clockwise thrusters off.
-func (s *Ship) CcwThrustersOff() {
-	if s.ccwThrusters {
-		s.ccwThrusters = false
+// CounterClockwiseThrustersOff turns the counter clockwise thrusters off.
+func (s *Ship) CounterClockwiseThrustersOff() {
+	if s.counterClockwiseThrusters {
+		s.counterClockwiseThrusters = false
 		rcsOff.Rewind()
 		rcsOff.Play()
 		unQueuePlayer(rcs)
 	}
 }
 
-// FwdThrustersOn turns the forward thrusters on.
-func (s *Ship) FwdThrustersOn() {
-	if !s.fwdThrusters {
-		s.fwdThrusters = true
+// ForwardThrustersOn turns the forward thrusters on.
+func (s *Ship) ForwardThrustersOn() {
+	if !s.forwardThrusters {
+		s.forwardThrusters = true
 		queuePlayer(rcs)
 	}
 }
 
-// FwdThrustersOff turns the forward thrusters off.
-func (s *Ship) FwdThrustersOff() {
-	if s.fwdThrusters {
-		s.fwdThrusters = false
+// ForwardThrustersOff turns the forward thrusters off.
+func (s *Ship) ForwardThrustersOff() {
+	if s.forwardThrusters {
+		s.forwardThrusters = false
 		rcsOff.Rewind()
 		rcsOff.Play()
 		unQueuePlayer(rcs)
 	}
 }
 
-// RevThrustersOn turns the reverse thrusters on.
-func (s *Ship) RevThrustersOn() {
-	if !s.revThrusters {
-		s.revThrusters = true
+// ReverseThrustersOn turns the reverse thrusters on.
+func (s *Ship) ReverseThrustersOn() {
+	if !s.reverseThrusters {
+		s.reverseThrusters = true
 		queuePlayer(rcs)
 	}
 }
 
-// RevThrustersOff turns the reverse thrusters off.
-func (s *Ship) RevThrustersOff() {
-	if s.revThrusters {
-		s.revThrusters = false
+// ReverseThrustersOff turns the reverse thrusters off.
+func (s *Ship) ReverseThrustersOff() {
+	if s.reverseThrusters {
+		s.reverseThrusters = false
 		rcsOff.Rewind()
 		rcsOff.Play()
 		unQueuePlayer(rcs)
@@ -286,10 +291,10 @@ func (s *Ship) RevThrustersOff() {
 
 // isMaxSpd returns true if the ship is at max speed.
 func (s *Ship) isMaxSpd() bool {
-	return math.Abs(s.xSpd)+math.Abs(s.ySpd) == s.sMax
+	return math.Abs(s.xSpd)+math.Abs(s.ySpd) == s.maxSpeed
 }
 
 // ISMaxRSpd returns true if the ship is at max rotational speed.
 func (s *Ship) isMaxRSpd() bool {
-	return math.Abs(s.rSpd) == s.rMax
+	return math.Abs(s.rSpd) == s.maxRotationSpeed
 }

@@ -8,19 +8,28 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
 
+const (
+	rcsSoundFilePath            = "../../assets/rcs.wav"
+	rcsOffSoundFilePath         = "../../assets/rcsoff.wav"
+	missileSoundFilePath        = "../../assets/missile.wav"
+	missileOffSoundFilePath     = "../../assets/missileoff.wav"
+	missileReleaseSoundFilePath = "../../assets/missilerelease.wav"
+	missleEmptySoundFilePath    = "../../assets/missileempty.wav"
+)
+
 var (
 	sampleRate = 22050
 
 	// Sound loops which can be heard at once.
-	queue   []*audio.Player
-	missile *audio.Player
-	rcs     *audio.Player
+	playerQueue   []*audio.Player
+	missilePlayer *audio.Player
+	rcsPlayer     *audio.Player
 
 	// Sound effect players.
-	missileOff *audio.Player
-	rcsOff     *audio.Player
-	release    *audio.Player
-	warning    *audio.Player
+	rcsOffPlayer         *audio.Player
+	missileOffPlayer     *audio.Player
+	missileReleasePlayer *audio.Player
+	missleEmptyPlayer    *audio.Player
 )
 
 // InitSounds initializes looping sounds.
@@ -28,7 +37,7 @@ func InitSounds() {
 	audioContext := audio.NewContext(sampleRate)
 
 	// Load the rcs sound.
-	f, err := ebitenutil.OpenFile("../../assets/rcs.wav")
+	f, err := ebitenutil.OpenFile(rcsSoundFilePath)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -37,13 +46,13 @@ func InitSounds() {
 		log.Fatal(err)
 	}
 	sound := audio.NewInfiniteLoopWithIntro(d, 1*4*int64(sampleRate), 5*4*int64(sampleRate))
-	rcs, err = audio.NewPlayer(audioContext, sound)
+	rcsPlayer, err = audio.NewPlayer(audioContext, sound)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// Load the rcs off sound.
-	f, err = ebitenutil.OpenFile("../../assets/rcsoff.wav")
+	f, err = ebitenutil.OpenFile(rcsOffSoundFilePath)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -51,13 +60,13 @@ func InitSounds() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	rcsOff, err = audio.NewPlayer(audioContext, d)
+	rcsOffPlayer, err = audio.NewPlayer(audioContext, d)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// Load the missile thrusting sound.
-	f, err = ebitenutil.OpenFile("../../assets/missile.wav")
+	f, err = ebitenutil.OpenFile(missileSoundFilePath)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -66,13 +75,13 @@ func InitSounds() {
 		log.Fatal(err)
 	}
 	sound = audio.NewInfiniteLoopWithIntro(d, 2*4*int64(sampleRate), 4*4*int64(sampleRate))
-	missile, err = audio.NewPlayer(audioContext, sound)
+	missilePlayer, err = audio.NewPlayer(audioContext, sound)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// Load the missile off sound.
-	f, err = ebitenutil.OpenFile("../../assets/missileoff.wav")
+	f, err = ebitenutil.OpenFile(missileOffSoundFilePath)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -80,13 +89,13 @@ func InitSounds() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	missileOff, err = audio.NewPlayer(audioContext, d)
+	missileOffPlayer, err = audio.NewPlayer(audioContext, d)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// Load the missile release sound.
-	f, err = ebitenutil.OpenFile("../../assets/release.wav")
+	f, err = ebitenutil.OpenFile(missileReleaseSoundFilePath)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -94,13 +103,13 @@ func InitSounds() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	release, err = audio.NewPlayer(audioContext, d)
+	missileReleasePlayer, err = audio.NewPlayer(audioContext, d)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// Load the missile warning sound.
-	f, err = ebitenutil.OpenFile("../../assets/warning.wav")
+	f, err = ebitenutil.OpenFile(missleEmptySoundFilePath)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -109,7 +118,7 @@ func InitSounds() {
 		log.Fatal(err)
 	}
 
-	warning, err = audio.NewPlayer(audioContext, d)
+	missleEmptyPlayer, err = audio.NewPlayer(audioContext, d)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -117,17 +126,17 @@ func InitSounds() {
 
 // Queue the audio player.
 func queuePlayer(p *audio.Player) {
-	queue = append(queue, p)
+	playerQueue = append(playerQueue, p)
 	p.Rewind()
 	p.Play()
 }
 
-// UnQueue the audio player. 
+// UnQueue the audio player.
 // Keep looping if same audio player is in the audio queue.
 func unQueuePlayer(p *audio.Player) {
 	found := false
-	for i := 0; i < len(queue); {
-		if queue[i] != p {
+	for i := 0; i < len(playerQueue); {
+		if playerQueue[i] != p {
 			i++
 			continue
 		}
@@ -137,8 +146,8 @@ func unQueuePlayer(p *audio.Player) {
 		}
 		found = true
 		// Remove the audio player from queue and replace it with the last one.
-		queue[i] = queue[len(queue)-1]
-		queue = queue[:len(queue)-1]
+		playerQueue[i] = playerQueue[len(playerQueue)-1]
+		playerQueue = playerQueue[:len(playerQueue)-1]
 	}
 	p.Pause()
 }

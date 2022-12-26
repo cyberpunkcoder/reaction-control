@@ -18,7 +18,7 @@ type Ship struct {
 	maxRotationSpeed          float64
 	maxSpeed                  float64
 	deltaV                    float64
-	missileCount             int
+	missileCount              int
 	leftThrusters             bool
 	rightThrusters            bool
 	clockwiseThrusters        bool
@@ -35,7 +35,7 @@ func CreateShip(p Position, s Speed) *Ship {
 			Position: p,
 			Speed:    s,
 		},
-		missileCount:    defaultMissilesCount,
+		missileCount:     defaultMissilesCount,
 		maxRotationSpeed: defaultMaxRotationSpeed,
 		maxSpeed:         defaultMaxSpeed,
 		deltaV:           defaultDeltaV,
@@ -160,9 +160,9 @@ func (s *Ship) Draw(screen *ebiten.Image, op *ebiten.DrawImageOptions, g *Game) 
 func (s *Ship) FireMissile(g *Game) {
 	// Return if ship is out of missiles
 	if s.missileCount == 0 {
-		if !warning.IsPlaying() {
-			warning.Rewind()
-			warning.Play()
+		if !missleEmptyPlayer.IsPlaying() {
+			missleEmptyPlayer.Rewind()
+			missleEmptyPlayer.Play()
 		}
 		return
 	}
@@ -177,15 +177,15 @@ func (s *Ship) FireMissile(g *Game) {
 
 	missile := CreateMissile(pos, g.player.Speed)
 	g.elements[0] = append(g.elements[0], missile)
-	release.Rewind()
-	release.Play()
+	missileReleasePlayer.Rewind()
+	missileReleasePlayer.Play()
 }
 
 // LeftThrustersOn turns the left thrusters on.
 func (s *Ship) LeftThrustersOn() {
 	if !s.leftThrusters {
 		s.leftThrusters = true
-		queuePlayer(rcs)
+		queuePlayer(rcsPlayer)
 	}
 }
 
@@ -193,9 +193,9 @@ func (s *Ship) LeftThrustersOn() {
 func (s *Ship) LeftThrustersOff() {
 	if s.leftThrusters {
 		s.leftThrusters = false
-		rcsOff.Rewind()
-		rcsOff.Play()
-		unQueuePlayer(rcs)
+		rcsOffPlayer.Rewind()
+		rcsOffPlayer.Play()
+		unQueuePlayer(rcsPlayer)
 	}
 }
 
@@ -203,7 +203,7 @@ func (s *Ship) LeftThrustersOff() {
 func (s *Ship) RightThrustersOn() {
 	if !s.rightThrusters {
 		s.rightThrusters = true
-		queuePlayer(rcs)
+		queuePlayer(rcsPlayer)
 	}
 }
 
@@ -211,9 +211,9 @@ func (s *Ship) RightThrustersOn() {
 func (s *Ship) RightThrustersOff() {
 	if s.rightThrusters {
 		s.rightThrusters = false
-		rcsOff.Rewind()
-		rcsOff.Play()
-		unQueuePlayer(rcs)
+		rcsOffPlayer.Rewind()
+		rcsOffPlayer.Play()
+		unQueuePlayer(rcsPlayer)
 	}
 }
 
@@ -221,7 +221,7 @@ func (s *Ship) RightThrustersOff() {
 func (s *Ship) ClockwiseThrustersOn() {
 	if !s.clockwiseThrusters {
 		s.clockwiseThrusters = true
-		queuePlayer(rcs)
+		queuePlayer(rcsPlayer)
 	}
 }
 
@@ -229,9 +229,9 @@ func (s *Ship) ClockwiseThrustersOn() {
 func (s *Ship) ClockwiseThrustersOff() {
 	if s.clockwiseThrusters {
 		s.clockwiseThrusters = false
-		rcsOff.Rewind()
-		rcsOff.Play()
-		unQueuePlayer(rcs)
+		rcsOffPlayer.Rewind()
+		rcsOffPlayer.Play()
+		unQueuePlayer(rcsPlayer)
 	}
 }
 
@@ -239,7 +239,7 @@ func (s *Ship) ClockwiseThrustersOff() {
 func (s *Ship) CounterClockwiseThrustersOn() {
 	if !s.counterClockwiseThrusters {
 		s.counterClockwiseThrusters = true
-		queuePlayer(rcs)
+		queuePlayer(rcsPlayer)
 	}
 }
 
@@ -247,9 +247,9 @@ func (s *Ship) CounterClockwiseThrustersOn() {
 func (s *Ship) CounterClockwiseThrustersOff() {
 	if s.counterClockwiseThrusters {
 		s.counterClockwiseThrusters = false
-		rcsOff.Rewind()
-		rcsOff.Play()
-		unQueuePlayer(rcs)
+		rcsOffPlayer.Rewind()
+		rcsOffPlayer.Play()
+		unQueuePlayer(rcsPlayer)
 	}
 }
 
@@ -257,7 +257,7 @@ func (s *Ship) CounterClockwiseThrustersOff() {
 func (s *Ship) ForwardThrustersOn() {
 	if !s.forwardThrusters {
 		s.forwardThrusters = true
-		queuePlayer(rcs)
+		queuePlayer(rcsPlayer)
 	}
 }
 
@@ -265,9 +265,9 @@ func (s *Ship) ForwardThrustersOn() {
 func (s *Ship) ForwardThrustersOff() {
 	if s.forwardThrusters {
 		s.forwardThrusters = false
-		rcsOff.Rewind()
-		rcsOff.Play()
-		unQueuePlayer(rcs)
+		rcsOffPlayer.Rewind()
+		rcsOffPlayer.Play()
+		unQueuePlayer(rcsPlayer)
 	}
 }
 
@@ -275,7 +275,7 @@ func (s *Ship) ForwardThrustersOff() {
 func (s *Ship) ReverseThrustersOn() {
 	if !s.reverseThrusters {
 		s.reverseThrusters = true
-		queuePlayer(rcs)
+		queuePlayer(rcsPlayer)
 	}
 }
 
@@ -283,9 +283,9 @@ func (s *Ship) ReverseThrustersOn() {
 func (s *Ship) ReverseThrustersOff() {
 	if s.reverseThrusters {
 		s.reverseThrusters = false
-		rcsOff.Rewind()
-		rcsOff.Play()
-		unQueuePlayer(rcs)
+		rcsOffPlayer.Rewind()
+		rcsOffPlayer.Play()
+		unQueuePlayer(rcsPlayer)
 	}
 }
 

@@ -24,7 +24,6 @@ var (
 
 // InitImages initializes the game images.
 func InitImages() {
-
 	shipImage = mustLoadImageFromFile("../../assets/ship.png")
 	alienImage = mustLoadImageFromFile("../../assets/alien.png")
 	missileImage = mustLoadImageFromFile("../../assets/missile.png")

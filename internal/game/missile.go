@@ -48,14 +48,14 @@ func (m *Missile) Update(g *Game) {
 
 			// Check if the missile is thrusting.
 			if m.time == m.delay {
-				queuePlayer(missile)
+				queuePlayer(missilePlayer)
 			}
 		}
 		// Check if the missile has burned out.
 	} else if m.time == m.delay+m.burn {
-		missileOff.Rewind()
-		missileOff.Play()
-		unQueuePlayer(missile)
+		missileOffPlayer.Rewind()
+		missileOffPlayer.Play()
+		unQueuePlayer(missilePlayer)
 	}
 	m.time++
 }

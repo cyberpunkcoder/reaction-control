@@ -24,17 +24,17 @@ var (
 
 // InitImages initializes the game images.
 func InitImages() {
-	shipImage = mustLoadImageFromFile("../../assets/ship.png")
-	alienImage = mustLoadImageFromFile("../../assets/alien.png")
-	missileImage = mustLoadImageFromFile("../../assets/missile.png")
-	fusionImage = mustLoadImageFromFile("../../assets/fusion.png")
-	rcsl = mustLoadImageFromFile("../../assets/rcsl.png")
-	rcsfr = mustLoadImageFromFile("../../assets/rcsfr.png")
-	rcsfl = mustLoadImageFromFile("../../assets/rcsfl.png")
-	rcsr = mustLoadImageFromFile("../../assets/rcsr.png")
-	rcsbl = mustLoadImageFromFile("../../assets/rcsbl.png")
-	rcsbr = mustLoadImageFromFile("../../assets/rcsbr.png")
-	space = mustLoadImageFromFile("../../assets/space.png")
+	shipImage = mustLoadImageFromFile("../../assets/images/ship.png")
+	alienImage = mustLoadImageFromFile("../../assets/images/alien.png")
+	missileImage = mustLoadImageFromFile("../../assets/images/missile.png")
+	fusionImage = mustLoadImageFromFile("../../assets/images/fusion.png")
+	rcsl = mustLoadImageFromFile("../../assets/images/rcsl.png")
+	rcsfr = mustLoadImageFromFile("../../assets/images/rcsfr.png")
+	rcsfl = mustLoadImageFromFile("../../assets/images/rcsfl.png")
+	rcsr = mustLoadImageFromFile("../../assets/images/rcsr.png")
+	rcsbl = mustLoadImageFromFile("../../assets/images/rcsbl.png")
+	rcsbr = mustLoadImageFromFile("../../assets/images/rcsbr.png")
+	space = mustLoadImageFromFile("../../assets/images/space.png")
 }
 
 // mustLoadImageFromFile loads an image from a file and panics if it fails.

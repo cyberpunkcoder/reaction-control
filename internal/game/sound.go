@@ -9,12 +9,12 @@ import (
 )
 
 const (
-	rcsSoundFilePath            = "../../assets/rcs.wav"
-	rcsOffSoundFilePath         = "../../assets/rcsoff.wav"
-	missileSoundFilePath        = "../../assets/missile.wav"
-	missileOffSoundFilePath     = "../../assets/missileoff.wav"
-	missileReleaseSoundFilePath = "../../assets/missilerelease.wav"
-	missleEmptySoundFilePath    = "../../assets/missileempty.wav"
+	rcsSoundFilePath            = "../../assets/audio/rcs.wav"
+	rcsOffSoundFilePath         = "../../assets/audio/rcsoff.wav"
+	missileSoundFilePath        = "../../assets//audio/missile.wav"
+	missileOffSoundFilePath     = "../../assets/audio/missileoff.wav"
+	missileReleaseSoundFilePath = "../../assets/audio/missilerelease.wav"
+	missleEmptySoundFilePath    = "../../assets/audio/missileempty.wav"
 )
 
 var (

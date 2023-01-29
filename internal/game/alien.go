@@ -114,22 +114,3 @@ func (a *Alien) isGoingAwayFrom(o *Object) bool {
 	}
 	return false
 }
-
-// isApproachingTooFast returns true if the alien is approaching the object too fast.
-func (a Alien) isApproachingTooFast() bool {
-	if a.xPos > a.target.xPos {
-		if a.xSpd > a.target.xSpd+a.thrust {
-			return true
-		}
-	} else if a.xSpd < a.target.xSpd-a.thrust {
-		return true
-	}
-	if a.yPos > a.target.yPos {
-		if a.ySpd > a.target.ySpd+a.thrust {
-			return true
-		}
-	} else if a.ySpd < a.target.ySpd-a.thrust {
-		return true
-	}
-	return false
-}

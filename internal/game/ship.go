@@ -288,13 +288,3 @@ func (s *Ship) ReverseThrustersOff() {
 		unQueuePlayer(rcsPlayer)
 	}
 }
-
-// isMaxSpd returns true if the ship is at max speed.
-func (s *Ship) isMaxSpd() bool {
-	return math.Abs(s.xSpd)+math.Abs(s.ySpd) == s.maxSpeed
-}
-
-// ISMaxRSpd returns true if the ship is at max rotational speed.
-func (s *Ship) isMaxRSpd() bool {
-	return math.Abs(s.rSpd) == s.maxRotationSpeed
-}
